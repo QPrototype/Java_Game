@@ -2,16 +2,16 @@ package com.mygdx.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.mygdx.game.leagueofages;
+import com.mygdx.game.MyGdxGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 
 		config.title = "Testing";
-		config.width = 720;
-		config.height = 400;
+		config.width = 1280;
+		config.height = 1080;
 
-		new LwjglApplication(new leagueofages(), config);
+		new LwjglApplication(new MyGdxGame(), config);
 	}
 }
