@@ -1,8 +1,3 @@
-Reio Sedrik - resedr
-Rasmus Sikk - rasikk
-=====================
-
-
 Age of Legends
 ===============
 
@@ -66,3 +61,8 @@ Punktisoov
 - 10 punkti
 - Mängul on AI ehk vastane kelle vastu mängida.
 - Mängu maht on suur. Palju erinevaid funktsionaalsusi.
+
+Autorid
+--------
+Rasmus Sikk - rasikk
+Reio Sedrik
