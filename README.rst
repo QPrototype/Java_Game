@@ -65,4 +65,4 @@ Punktisoov
 Autorid
 --------
 Rasmus Sikk - rasikk
-Reio Sedrik
+Reio Sedrik - resedr
