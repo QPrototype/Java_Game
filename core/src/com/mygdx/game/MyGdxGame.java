@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import character_movement.CharacterMovement;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -15,9 +16,8 @@ public class MyGdxGame implements ApplicationListener {
 	private SpriteBatch batch;
 	private TextureAtlas walkingAtlas;
 	private TextureAtlas lookingAtlas;
-	private Sprite sprite;
-	private int currentFrame = 1;
-	private String currentAtlasKey = new String("e0000");
+	private CharacterMovement sprite;
+
 
 	private float destinationX, destinationY;
 
@@ -29,116 +29,15 @@ public class MyGdxGame implements ApplicationListener {
 
 		AtlasRegion region = walkingAtlas.findRegion("walking e0000");
 
-		sprite = new Sprite(region);
+		sprite = new CharacterMovement(walkingAtlas, lookingAtlas, region);
 
 		sprite.setPosition(120, 100);
-		sprite.scale(2.5f);
+		sprite.scale(0.1f);
 		Timer.schedule(new Task(){
-						   int x = 50;
-						   int y = 100;
 
 						   @Override
 						   public void run() {
-
-
-						   if (destinationX - x > 10) {
-						   		if (destinationY > y) {
-									x += 10;
-									y += 10;
-									sprite.setPosition(x, y);
-									currentFrame++;
-									if (currentFrame > 7) {
-										currentFrame = 0;
-									}
-									currentAtlasKey = String.format("walking ne%04d", currentFrame);
-									sprite.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-								} else if (y - destinationY > 10) {
-									x += 10;
-									y -= 10;
-									sprite.setPosition(x, y);
-									currentFrame++;
-									if (currentFrame > 7) {
-										currentFrame = 0;
-									}
-									currentAtlasKey = String.format("walking se%04d", currentFrame);
-									sprite.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-								} else {
-									x += 10;
-
-									sprite.setPosition(x, y);
-									currentFrame++;
-									if (currentFrame > 7) {
-										currentFrame = 0;
-									}
-									currentAtlasKey = String.format("walking e%04d", currentFrame);
-									sprite.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-								}
-
-						   }
-						   if (x - destinationX > 10) {
-						   		if (destinationY - y > 10) {
-									x -= 10;
-									y += 10;
-									sprite.setPosition(x, y);
-									currentFrame++;
-									if (currentFrame > 7) {
-										currentFrame = 0;
-									}
-									currentAtlasKey = String.format("walking nw%04d", currentFrame);
-									sprite.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-
-								} else if (y - destinationY > 10) {
-									x -= 10;
-									y -= 10;
-									sprite.setPosition(x, y);
-									currentFrame++;
-									if (currentFrame > 7) {
-										currentFrame = 0;
-									}
-									currentAtlasKey = String.format("walking sw%04d", currentFrame);
-									sprite.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-
-								} else {
-									x -= 10;
-									sprite.setPosition(x, y);
-									currentFrame++;
-									if (currentFrame > 7) {
-										currentFrame = 0;
-									}
-									currentAtlasKey = String.format("walking w%04d", currentFrame);
-									sprite.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-
-								}
-						   }
-						   if (Math.abs(destinationX - x) <= 10) {
-							   if (destinationY - y > 10) {
-								   y += 10;
-								   sprite.setPosition(x, y);
-								   currentFrame++;
-								   if (currentFrame > 7) {
-									   currentFrame = 0;
-								   }
-								   currentAtlasKey = String.format("walking n%04d", currentFrame);
-								   sprite.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-
-							   } else if (y - destinationY > 10){
-								   y -= 10;
-								   sprite.setPosition(x, y);
-								   currentFrame++;
-								   if (currentFrame > 7) {
-									   currentFrame = 0;
-								   }
-								   currentAtlasKey = String.format("walking s%04d", currentFrame);
-								   sprite.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-
-							   } else {
-								   currentAtlasKey = currentAtlasKey.replaceAll("walking", "looking");
-
-								   sprite.setRegion(lookingAtlas.findRegion(currentAtlasKey));
-
-
-							   }
-						   }
+							   sprite.walk(destinationX, destinationY);
 
 						   }
 					   }
@@ -160,6 +59,8 @@ public class MyGdxGame implements ApplicationListener {
 			destinationX = Gdx.input.getX() - sprite.getWidth()/2;
 			destinationY = Gdx.graphics.getHeight() - Gdx.input.getY() - sprite.getHeight()/2;
 		}
+
+
 
 		batch.begin();
 		sprite.draw(batch);
