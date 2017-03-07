@@ -4,10 +4,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 
-public class CharacterMovement extends Sprite{
+public class CharacterMovement extends Sprite {
 
     private TextureAtlas walkingAtlas;
     private TextureAtlas lookingAtlas;
+
 
     private int currentFrame = 1;
     private String currentAtlasKey;
@@ -105,7 +106,7 @@ public class CharacterMovement extends Sprite{
                 currentAtlasKey = String.format("walking n%04d", currentFrame);
                 this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
 
-            } else if (currentY - destinationY > 10){
+            } else if (currentY - destinationY > 10) {
                 currentY -= 5;
                 this.setPosition(currentX, currentY);
                 currentFrame++;
