@@ -15,6 +15,7 @@ import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
+import com.badlogic.gdx.math.GeometryUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -46,54 +47,25 @@ public class MyGdxGame implements ApplicationListener, InputProcessor {
     //map thing - needs to be celaned up!
     //------------
 
-    private float destinationX, destinationY;
-    Vector3 worldCoordinates = new Vector3(destinationX, destinationY, 0);
+    private float destinationX , destinationY;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
-
         walkingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/walking.atlas"));
         lookingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/looking.atlas"));
         //map thing - needs to be cleaned up!
 
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
+        camera = new OrthographicCamera();
         viewport = new FillViewport(1280, 1080, camera);
+
         viewport.apply();
 
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight/ 2, 0);
-        camera.update();
+        camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 
         map = new TmxMapLoader().load("core/assets/map/testingmap.tmx");
         mapRenderer = new IsometricTiledMapRenderer(map);
         Gdx.input.setInputProcessor(this);
-        //box2d world
-        world = new World(new Vector2(0, 0), false);
-        box2DDebugRenderer = new Box2DDebugRenderer();
-//
-//      local variables
-        BodyDef bdef = new BodyDef();
-        PolygonShape shape = new PolygonShape();
-        FixtureDef fdef = new FixtureDef();
-        Body body;
-//
-        for (MapObject object : map.getLayers().get(1).getObjects().getByType(PolygonMapObject.class)){
-            Polygon polygon = ((PolygonMapObject) object).getPolygon();
-
-            bdef.type = BodyDef.BodyType.DynamicBody;
-            bdef.position.set(0, 0);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox(polygon.area() / 2, polygon.area() / 2);
-            fdef.shape = shape;
-            body.createFixture(fdef);
-
-
-        }
-
 
 
         //------------
@@ -107,7 +79,7 @@ public class MyGdxGame implements ApplicationListener, InputProcessor {
         Timer.schedule(new Task() {
                            @Override
                            public void run() {
-                               sprite.walk(worldCoordinates.x, worldCoordinates.y);
+                               sprite.walk(destinationX, destinationY);
                            }
                        }
                 , 0, 1 / 30.0f);
@@ -121,23 +93,28 @@ public class MyGdxGame implements ApplicationListener, InputProcessor {
 
     @Override
     public void render() {
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
+
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            worldCoordinates.x = Gdx.input.getX() - sprite.getWidth() / 2;
-            worldCoordinates.y = Gdx.graphics.getHeight() - Gdx.input.getY() - sprite.getHeight() / 2;
+            //projection to world coords
+            Vector3 clickOnScreen = new Vector3();
+            clickOnScreen.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(clickOnScreen);
+            destinationX = clickOnScreen.x - sprite.getWidth() / 2;
+            destinationY = clickOnScreen.y - sprite.getHeight() / 2;
+            //-----------
         }
-
+        //map stufff
         handleInput();
-
-        box2DDebugRenderer.render(world, camera.combined);
-        camera.update();
         mapRenderer.setView(camera);
         mapRenderer.render();
 
-        batch.setProjectionMatrix(camera.combined);
-
+        //---------------
         batch.begin();
         sprite.draw(batch);
         batch.end();
@@ -206,8 +183,7 @@ public class MyGdxGame implements ApplicationListener, InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         Gdx.app.log("Mouse Event","Click at " + screenX + "," + screenY);
-        Vector3 worldCoordinates = new Vector3(screenX, screenY, 0);
-        camera.unproject(worldCoordinates);
+        Vector3 worldCoordinates = camera.unproject(new Vector3(screenX,screenY,0));
         Gdx.app.log("Mouse Event","Projected at " + worldCoordinates.x + "," + worldCoordinates.y);
         return false;
     }
