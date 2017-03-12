@@ -1,25 +1,25 @@
 package com.mygdx.game;
 
 import character_movement.CharacterMovement;
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
+//import com.badlogic.gdx.physics.*;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class MyGdxGame implements ApplicationListener, InputProcessor {
+public class MyGdxGame extends Game implements ApplicationListener, InputProcessor {
 
     private SpriteBatch batch;
     private TextureAtlas walkingAtlas;
@@ -41,7 +41,8 @@ public class MyGdxGame implements ApplicationListener, InputProcessor {
     //map thing - needs to be celaned up!
     //------------
 
-    private float destinationX , destinationY;
+    private float destinationX = -1;
+    private float destinationY = -1;
 
     @Override
     public void create() {
@@ -50,26 +51,34 @@ public class MyGdxGame implements ApplicationListener, InputProcessor {
         lookingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/looking.atlas"));
         //map thing - needs to be cleaned up!
 
-        camera = new OrthographicCamera();
-        viewport = new FillViewport(1280, 1080, camera);
+        camera = new OrthographicCamera(1600, 800);
+        //viewport = new FillViewport(1600, 800, camera);
 
-        viewport.apply();
+        //viewport.apply();
 
-        camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
 
-        map = new TmxMapLoader().load("core/assets/map/testingmap.tmx");
+        map = new TmxMapLoader().load("core/assets/map/water_collision.tmx");
         mapRenderer = new IsometricTiledMapRenderer(map);
         Gdx.input.setInputProcessor(this);
 
+        MapLayers layers = map.getLayers();
+
+        TiledMapTileLayer layer0 = (TiledMapTileLayer) map.getLayers().get(0);
+        Vector3 center = new Vector3(layer0.getWidth() * layer0.getTileWidth()
+                / 2, layer0.getHeight() * layer0.getTileHeight() / 2, 0);
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.position.set(center);
 
         //------------
 
         AtlasRegion region = walkingAtlas.findRegion("walking e0000");
 
-        sprite = new CharacterMovement(walkingAtlas, lookingAtlas, region);
+        sprite = new CharacterMovement(walkingAtlas, lookingAtlas, region,(TiledMapTileLayer)layers.get(0));
 
-        sprite.setPosition(120, 100);
+        //sprite.setPosition(250, 100);
         sprite.scale(0.1f);
+
+
         Timer.schedule(new Task() {
                            @Override
                            public void run() {
@@ -100,7 +109,10 @@ public class MyGdxGame implements ApplicationListener, InputProcessor {
             clickOnScreen.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(clickOnScreen);
             destinationX = clickOnScreen.x - sprite.getWidth() / 2;
-            destinationY = clickOnScreen.y - sprite.getHeight() / 2;
+            destinationY = clickOnScreen.y - 10;
+            //System.out.println(clickOnScreen.x + " : " + clickOnScreen.y);
+            //y = mapHeight - tilesize - y
+
             //-----------
         }
         //map stufff
@@ -145,11 +157,12 @@ public class MyGdxGame implements ApplicationListener, InputProcessor {
     }
     //----------------
 
-    @Override
+    /*@Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
-        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
-    }
+        camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 7, 0);
+        //viewport.update(width, height);
+
+    }*/
 
     @Override
     public void pause() {
@@ -176,9 +189,9 @@ public class MyGdxGame implements ApplicationListener, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Gdx.app.log("Mouse Event","Click at " + screenX + "," + screenY);
+       /* Gdx.app.log("Mouse Event","Click at " + screenX + "," + screenY);
         Vector3 worldCoordinates = camera.unproject(new Vector3(screenX,screenY,0));
-        Gdx.app.log("Mouse Event","Projected at " + worldCoordinates.x + "," + worldCoordinates.y);
+        Gdx.app.log("Mouse Event","Projected at " + worldCoordinates.x + "," + worldCoordinates.y);*/
         return false;
     }
 
