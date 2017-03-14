@@ -51,9 +51,9 @@ public class MyGdxGame extends Game implements ApplicationListener, InputProcess
         //map thing - needs to be cleaned up!
 
         camera = new OrthographicCamera(1600, 800);
-        //viewport = new FillViewport(1600, 800, camera);
+        viewport = new FillViewport(1600, 800, camera);
 
-        //viewport.apply();
+        viewport.apply();
 
 
         map = new TmxMapLoader().load("core/assets/map/water_collision.tmx");
@@ -156,12 +156,12 @@ public class MyGdxGame extends Game implements ApplicationListener, InputProcess
     }
     //----------------
 
-    /*@Override
+    @Override
     public void resize(int width, int height) {
         camera.position.set(camera.viewportWidth / 2, camera.viewportHeight / 7, 0);
-        //viewport.update(width, height);
+        viewport.update(width, height);
 
-    }*/
+    }
 
     @Override
     public void pause() {
