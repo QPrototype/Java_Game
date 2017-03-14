@@ -1,142 +1,182 @@
 package Screens;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import character_movement.CharacterMovement;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.MainGame.MainGame;
 
-public class MainScreen extends ApplicationAdapter implements InputProcessor {
-    Texture img;
-    TiledMap tiledMap;
-    OrthographicCamera camera;
-    TiledMapRenderer tiledMapRenderer;
-    SpriteBatch sb;
-    Texture texture;
-    Sprite sprite;
-
-    @Override public void create () {
-        float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();
-
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false,w,h);
-        camera.update();
-        tiledMap = new TmxMapLoader().load("core/assets/map/water_collision.tmx");
-        tiledMapRenderer = new IsometricTiledMapRenderer(tiledMap);
-        Gdx.input.setInputProcessor(this);
-
-        sb = new SpriteBatch();
-        texture = new Texture(Gdx.files.internal("core/assets/characters/pokermon.png"));
-        sprite = new Sprite(texture);
+public class MainScreen implements Screen {
 
 
-        // Get the width and height of our maps
-        // Then halve it, as our sprites are 64x64 not 32x32 that our map is made of
-        int mapWidth = tiledMap.getProperties().get("width",Integer.class)/2;
-        int mapHeight = tiledMap.getProperties().get("height",Integer.class)/2;
+    // Reference to game.
+    private MainGame game;
+    private TextureAtlas atlas;
 
-        // Create a new map layer
-        TiledMapTileLayer tileLayer = new TiledMapTileLayer(mapWidth,mapHeight,64,64);
+    // screen variables
+    private int WORLD_WIDTH = 1600;
+    private int WORLD_HEIGHT = 800;
+    private Viewport viewport;
+    private OrthographicCamera camera;
 
-        // Create a cell(tile) to add to the layer
-        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+    //map variables.
+    private TiledMap map;
+    private IsometricTiledMapRenderer mapRenderer;
 
-        // The sprite/tilesheet behind our new layer is a single image (our sprite)
-        // Create a TextureRegion that is the entire size of our texture
-        TextureRegion textureRegion = new TextureRegion(texture,64,64);
+    //Sprites
+    private SpriteBatch batch;
+    private TextureAtlas walkingAtlas;
+    private TextureAtlas lookingAtlas;
+    private CharacterMovement sprite;
 
-        // Now set the graphic for our cell to our newly created region
-        cell.setTile(new StaticTiledMapTile(textureRegion));
+    //movement
+    private float destinationX = -1;
+    private float destinationY = -1;
 
-        // Now set the cell at position 4,10 ( 8,20 in map coordinates ).  This is the position of a tree
-        // Relative to 0,0 in our map which is the bottom left corner
-        tileLayer.setCell(4,10,cell);
+    public MainScreen(MainGame game) {
+        this.game = game;
 
-        // Ok, I admit, this part is a gross hack.
-        // Get the current top most layer from the map and store it
-        MapLayer tempLayer = tiledMap.getLayers().get(tiledMap.getLayers().getCount()-1);
-        // Now remove it
-        tiledMap.getLayers().remove(tiledMap.getLayers().getCount()-1);
-        // Now add our newly created layer
-        tiledMap.getLayers().add(tileLayer);
-        // Now add it back, now our new layer is not the top most one.
-        tiledMap.getLayers().add(tempLayer);
+        //SpriteBatch.
+        batch = new SpriteBatch();
+        walkingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/walking.atlas"));
+        lookingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/looking.atlas"));
+
+        //Camera
+        camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        //Map
+        map = new TmxMapLoader().load("core/assets/map/testingmap.tmx");
+        mapRenderer = new IsometricTiledMapRenderer(map);
+
+        TiledMapTileLayer layer0 = (TiledMapTileLayer) map.getLayers().get(0);
+        Vector3 center = new Vector3(layer0.getWidth() * layer0.getTileWidth()
+                / 2, layer0.getHeight() * layer0.getTileHeight() / 2, 0);
+        MapLayers layers = map.getLayers();
+        camera.position.set(center);
+
+
+
+        TextureAtlas.AtlasRegion region = walkingAtlas.findRegion("walking e0000");
+        sprite = new CharacterMovement(walkingAtlas, lookingAtlas, region, (TiledMapTileLayer) layers.get(0));
+
+
+        //sprite.setPosition(250, 100);
+        sprite.scale(0.1f);
+        Timer.schedule(new Timer.Task() {
+                           @Override
+                           public void run() {
+                               sprite.walk(destinationX, destinationY);
+                           }
+                       }
+                , 0, 1 / 30.0f);
     }
 
-    @Override public void render () {
+    public TextureAtlas getAtlas() {
+        return atlas;
+    }
+
+    public TiledMap getMap(){
+        return map;
+    }
+
+
+    @Override
+    public void show() {
+
+    }
+
+    private void handleInput() {
+        //controlling camera
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            camera.translate(-10, 0, 0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            camera.translate(10, 0, 0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            camera.translate(0, -10, 0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            camera.translate(0, 10, 0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            camera.rotate(-0.5f, 0, 0, 1);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+            camera.rotate(0.5f, 0, 0, 1);
+        }
+    }
+
+    @Override
+    public void render(float delta) {
+
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
+
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        camera.update();
-        tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render();
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            //projection to world coords
+            Vector3 clickOnScreen = new Vector3();
+            clickOnScreen.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(clickOnScreen);
+            destinationX = clickOnScreen.x - sprite.getWidth() / 2;
+            destinationY = clickOnScreen.y - 10;
+            //System.out.println(clickOnScreen.x + " : " + clickOnScreen.y);
+            //y = mapHeight - tilesize - y
 
-        sb.setProjectionMatrix(camera.combined);
-        sb.begin();
-        sprite.draw(sb);
-        sb.end();
+            //-----------
+        }
+        //map stufff
+        handleInput();
+        mapRenderer.setView(camera);
+        mapRenderer.render();
+
+        //---------------
+        batch.begin();
+        sprite.draw(batch);
+        batch.end();
     }
 
-    @Override public boolean keyDown(int keycode) {
-        return false;
+    @Override
+    public void resize(int width, int height) {
+
     }
 
-    @Override public boolean keyUp(int keycode) {
-        if(keycode == Input.Keys.LEFT)
-            camera.translate(-32,0);
-        if(keycode == Input.Keys.RIGHT)
-            camera.translate(32,0);
-        if(keycode == Input.Keys.UP)
-            camera.translate(0,-32);
-        if(keycode == Input.Keys.DOWN)
-            camera.translate(0,32);
-        if(keycode == Input.Keys.NUM_1)
-            tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
-        if(keycode == Input.Keys.NUM_2)
-            tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
-        return false;
+    @Override
+    public void pause() {
+
     }
 
-    @Override public boolean keyTyped(char character) {
+    @Override
+    public void resume() {
 
-        return false;
     }
 
-    @Override public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Vector3 clickCoordinates = new Vector3(screenX,screenY,0);
-        Vector3 position = camera.unproject(clickCoordinates);
-        sprite.setPosition(position.x, position.y);
-        return true;
+    @Override
+    public void hide() {
+
     }
 
-    @Override public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
+    @Override
+    public void dispose() {
+        map.dispose();
+        mapRenderer.dispose();
 
-    @Override public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override public boolean scrolled(int amount) {
-        return false;
     }
 }
