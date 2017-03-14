@@ -10,6 +10,9 @@ public class CharacterMovement extends Sprite {
     private TextureAtlas walkingAtlas;
     private TextureAtlas lookingAtlas;
 
+    private int TILE_WIDTH = 64;
+    private int TILE_HEIGHT = 32;
+
 
     private int currentFrame = 1;
     private String currentAtlasKey;
@@ -66,7 +69,7 @@ public class CharacterMovement extends Sprite {
         if (destinationX - currentX > 5) {
             if (destinationY > currentY) {
                 TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / 64 - currentY / 32, currentX / 64 + currentY / 32 + 2);
+                        .getCell(currentX / TILE_WIDTH - currentY / TILE_HEIGHT, currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 2);
                 if (!((currentCell != null && currentCell.getTile().
                         getProperties().containsKey("Water")))) {
                     //Gdx.app.log("Colliding", "Colliding");
@@ -82,7 +85,7 @@ public class CharacterMovement extends Sprite {
                 }
             } else if (currentY - destinationY > 5) {
                 TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / 64 - currentY / 32 + 1, currentX / 64 + currentY / 32 + 1);
+                        .getCell(currentX / TILE_WIDTH - currentY / TILE_HEIGHT + 1, currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 1);
                 if (!((currentCell != null && currentCell.getTile().
                         getProperties().containsKey("Water")))) {
                     //Gdx.app.log("Colliding", "Colliding");
@@ -98,7 +101,7 @@ public class CharacterMovement extends Sprite {
                 }
             } else {
                 TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / 64 - currentY / 32 + 1, currentX / 64 + currentY / 32 + 2);
+                        .getCell(currentX / TILE_WIDTH - currentY / TILE_HEIGHT + 1, currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 2);
                 if (!((currentCell != null && currentCell.getTile().
                         getProperties().containsKey("Water")))) {
                     //Gdx.app.log("Colliding", "Colliding");
@@ -118,7 +121,7 @@ public class CharacterMovement extends Sprite {
         else if (currentX - destinationX > 5) {
             if (destinationY - currentY > 5) {
                 TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / 64 - currentY / 32 - 1, currentX / 64 + currentY / 32 + 1);
+                        .getCell(currentX / TILE_WIDTH - currentY / TILE_HEIGHT - 1, currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 1);
                 if (!((currentCell != null && currentCell.getTile().
                         getProperties().containsKey("Water")))) {
                     //Gdx.app.log("Colliding", "Colliding");
@@ -135,7 +138,7 @@ public class CharacterMovement extends Sprite {
 
             } else if (currentY - destinationY > 5) {
                 TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / 64 - currentY / 32, currentX / 64 + currentY / 32);
+                        .getCell(currentX / TILE_WIDTH - currentY / TILE_HEIGHT, currentX / TILE_WIDTH + currentY / TILE_HEIGHT);
                 if (!((currentCell != null && currentCell.getTile().
                         getProperties().containsKey("Water")))) {
                     //Gdx.app.log("Colliding", "Colliding");
@@ -152,7 +155,7 @@ public class CharacterMovement extends Sprite {
 
             } else {
                 TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / 64 - currentY / 32 - 1, currentX / 64 + currentY / 32);
+                        .getCell(currentX /TILE_WIDTH - currentY / TILE_HEIGHT - 1, currentX / TILE_WIDTH + currentY /TILE_HEIGHT);
                 if (!((currentCell != null && currentCell.getTile().
                         getProperties().containsKey("Water")))) {
                     //Gdx.app.log("Colliding", "Colliding");
@@ -171,7 +174,7 @@ public class CharacterMovement extends Sprite {
             //-------Up-----------
             if (destinationY - currentY > 1) {
                 TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / 64 - currentY / 32 - 1, currentX / 64 + currentY / 32 + 2);
+                        .getCell(currentX / TILE_WIDTH - currentY / TILE_HEIGHT - 1, currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 2);
                 if (!((currentCell != null && currentCell.getTile().
                         getProperties().containsKey("Water")))) {
                     //Gdx.app.log("Colliding", "Colliding");
@@ -188,7 +191,7 @@ public class CharacterMovement extends Sprite {
             //-----Down------
             } else if (currentY - destinationY > 5) {
                 TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / 64 - currentY / 32 + 1, currentX / 64 + currentY / 32);
+                        .getCell(currentX / TILE_WIDTH- currentY / TILE_HEIGHT + 1, currentX / TILE_WIDTH + currentY / TILE_HEIGHT);
                     if (!((currentCell != null && currentCell.getTile().
                             getProperties().containsKey("Water")))) {
                         //Gdx.app.log("Colliding", "Colliding");
