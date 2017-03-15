@@ -2,6 +2,7 @@ package character_movement;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
 
@@ -10,8 +11,8 @@ public class CharacterMovement extends Sprite {
     private TextureAtlas walkingAtlas;
     private TextureAtlas lookingAtlas;
 
-    private int TILE_WIDTH = 64;
-    private int TILE_HEIGHT = 32;
+    private static final int TILE_WIDTH = 64;
+    private static final int TILE_HEIGHT = 32;
 
 
     private int currentFrame = 1;
@@ -19,17 +20,21 @@ public class CharacterMovement extends Sprite {
     private int currentX = 800;
     private int currentY = 0;
 
-    private TiledMapTileLayer collisionLayer;
+    private TiledMap map;
+    private TiledMapTileLayer background;
+    private TiledMapTileLayer foreground;
 
 
     public CharacterMovement(TextureAtlas walkingAtlas, TextureAtlas lookingAtlas, TextureAtlas.AtlasRegion region,
-                             TiledMapTileLayer collisionLayer) {
+                             TiledMap map) {
         super(new Sprite(region));
 
         this.walkingAtlas = walkingAtlas;
         this.lookingAtlas = lookingAtlas;
-        this.collisionLayer = collisionLayer;
+        this.map = map;
         this.setPosition(currentX, currentY);
+        this.background = (TiledMapTileLayer) map.getLayers().get(0);
+        //this.foreground = (TiledMapTileLayer) map.getLayers().get(1);
 
 
         //this.sprite = sprite;
@@ -43,7 +48,7 @@ public class CharacterMovement extends Sprite {
         return this.currentY;
     }
 
-    public boolean checkCollision(int currentX, int currentY, TiledMapTileLayer layer, String direction) {
+    public boolean checkCollision(int currentX, int currentY, String direction) {
         int x = currentX / TILE_WIDTH - currentY / TILE_HEIGHT;
         int y = currentX / TILE_WIDTH + currentY / TILE_HEIGHT;
         if (direction.equals("ne")) {
@@ -67,7 +72,7 @@ public class CharacterMovement extends Sprite {
         } else if (direction.equals("s")) {
             x++;
         }
-        TiledMapTileLayer.Cell currentCell = layer.getCell(x, y);
+        TiledMapTileLayer.Cell currentCell = background.getCell(x, y);
         return (currentCell != null && currentCell.getTile().
                 getProperties().containsKey("Water"));
     }
@@ -81,105 +86,74 @@ public class CharacterMovement extends Sprite {
 
         if (destinationX - currentX > 5) {
             if (destinationY > currentY
-                    && !checkCollision(currentX, currentY, collisionLayer, "ne")) {
+                    && !checkCollision(currentX, currentY,"ne")) {
                 currentX += 3;
                 currentY += 3;
-                this.setPosition(currentX, currentY);
-                currentFrame++;
-                if (currentFrame > 7) {
-                    currentFrame = 0;
-                }
-                currentAtlasKey = String.format("walking ne%04d", currentFrame);
-                this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-
+                changeFrame("ne");
             } else if (currentY - destinationY > 5
-                    && !checkCollision(currentX, currentY, collisionLayer, "se")) {
+                    && !checkCollision(currentX, currentY,"se")) {
                 currentX += 4;
                 currentY -= 4;
-                this.setPosition(currentX, currentY);
-                currentFrame++;
-                if (currentFrame > 7) {
-                    currentFrame = 0;
-                }
-                currentAtlasKey = String.format("walking se%04d", currentFrame);
-                this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-
+                changeFrame("se");
             } else {
-                if (!checkCollision(currentX, currentY, collisionLayer, "e")) {
+                if (!checkCollision(currentX, currentY,"e")) {
                     currentX += 3;
                     this.setPosition(currentX, currentY);
-                    currentFrame++;
-                    if (currentFrame > 7) {
-                        currentFrame = 0;
-                    }
-                    currentAtlasKey = String.format("walking e%04d", currentFrame);
-                    this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
+                    changeFrame("e");
                 }
             }
         } else if (currentX - destinationX > 5) {
             if (destinationY - currentY > 5
-                    && !checkCollision(currentX, currentY, collisionLayer, "nw")) {
+                    && !checkCollision(currentX, currentY,"nw")) {
                 currentX -= 4;
                 currentY += 4;
-                this.setPosition(currentX, currentY);
-                currentFrame++;
-                if (currentFrame > 7) {
-                    currentFrame = 0;
-                }
-                currentAtlasKey = String.format("walking nw%04d", currentFrame);
-                this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-
+                changeFrame("nw");
             } else if (currentY - destinationY > 5
-                    && !checkCollision(currentX, currentY, collisionLayer, "sw")) {
+                    && !checkCollision(currentX, currentY, "sw")) {
                 currentX -= 3;
                 currentY -= 3;
-                this.setPosition(currentX, currentY);
-                currentFrame++;
-                if (currentFrame > 7) {
-                    currentFrame = 0;
-                }
-                currentAtlasKey = String.format("walking sw%04d", currentFrame);
-                this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
+                changeFrame("sw");
             } else {
-                if (!checkCollision(currentX, currentY, collisionLayer, "w")) {
+                if (!checkCollision(currentX, currentY,"w")) {
                     currentX -= 4;
-                    this.setPosition(currentX, currentY);
-                    currentFrame++;
-                    if (currentFrame > 7) {
-                        currentFrame = 0;
-                    }
-                    currentAtlasKey = String.format("walking w%04d", currentFrame);
-                    this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-
+                    changeFrame("w");
                 }
             }
-        } else if (Math.abs(destinationX - currentX) <= 10) {
+        } else if (Math.abs(destinationX - currentX) <= 5) {
             if (destinationY - currentY > 1
-                    && !checkCollision(currentX, currentY, collisionLayer, "n")) {
+                    && !checkCollision(currentX, currentY,"n")) {
                     currentY += 4;
-                    this.setPosition(currentX, currentY);
-                    currentFrame++;
-                    if (currentFrame > 7) {
-                        currentFrame = 0;
-                    }
-                    currentAtlasKey = String.format("walking n%04d", currentFrame);
-                    this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
+                    changeFrame("n");
             } else if (currentY - destinationY > 5
-                    && !checkCollision(currentX, currentY, collisionLayer, "s")) {
+                    && !checkCollision(currentX, currentY,"s")) {
                     currentY -= 4;
-                    this.setPosition(currentX, currentY);
-                    currentFrame++;
-                    if (currentFrame > 7) {
-                        currentFrame = 0;
-                    }
-                    currentAtlasKey = String.format("walking s%04d", currentFrame);
-                    this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
+                    changeFrame("s");
             } else {
                 currentAtlasKey = currentAtlasKey.replaceAll("walking", "looking");
 
                 this.setRegion(lookingAtlas.findRegion(currentAtlasKey));
             }
         }
+    }
+
+    public void changeFrame(String direction) {
+        this.setPosition(currentX, currentY);
+        currentFrame++;
+        if (currentFrame > 7) {
+            currentFrame = 0;
+        }
+        currentAtlasKey = String.format("walking %s%04d", direction, currentFrame);
+        this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
+    }
+
+    public void cutTree(String direction, TextureAtlas cuttingAtlas) {
+        this.setPosition(currentX, currentY);
+        if (currentFrame > 12) {
+            currentFrame = 0;
+        }
+        currentAtlasKey = String.format("felling tree %s%04d", direction, currentFrame);
+        this.setRegion(cuttingAtlas.findRegion(currentAtlasKey));
+
     }
 }
 
