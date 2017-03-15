@@ -43,70 +43,70 @@ public class CharacterMovement extends Sprite {
         return this.currentY;
     }
 
+    public boolean checkCollision(int currentX, int currentY, TiledMapTileLayer layer, String direction) {
+        int x = currentX / TILE_WIDTH - currentY / TILE_HEIGHT;
+        int y = currentX / TILE_WIDTH + currentY / TILE_HEIGHT;
+        if (direction.equals("ne")) {
+            y++;
+        } else if (direction.equals("se")) {
+            x++;
+            //y++;
+        } else if (direction.equals("e")) {
+            x++;
+            y += 2;
+        } else if (direction.equals("nw")) {
+            x--;
+            y++;
+        } /*else if (direction.equals("sw")) {
+            //do nothing
+        }*/ else if (direction.equals("w")) {
+           x--;
+        } else if (direction.equals("n")) {
+            x--;
+            y += 2;
+        } else if (direction.equals("s")) {
+            x++;
+        }
+        TiledMapTileLayer.Cell currentCell = layer.getCell(x, y);
+        return (currentCell != null && currentCell.getTile().
+                getProperties().containsKey("Water"));
+    }
+
 
     public void walk(float destinationX, float destinationY) {
-
-        //System.out.println("x: " + (currentX / 64 - currentY / 32) + "y: " + (currentX / 64 + currentY / 32 + 1));
-        /*TiledMapTileLayer.Cell test = collisionLayer
-                .getCell(currentX / 64 - currentY / 32, currentX / 64 + currentY / 32);
-        if (test.getTile().getProperties().containsKey("Green")) {
-            System.out.println("Green");
-        }*/
-
-        /*TiledMapTileLayer.Cell first = collisionLayer
-                .getCell((int) (currentX / collisionLayer.getTileWidth()),
-                        (int) ((currentY) / collisionLayer.getHeight()));
-        if (((first != null && first.getTile().
-                getProperties().containsKey("Water")))) {
-            return;
-        }*/
-
         if (destinationX == -1 && destinationY == -1) {
             return;
         }
         currentAtlasKey = String.format("looking ne%04d", currentFrame);
 
         if (destinationX - currentX > 5) {
-            if (destinationY > currentY) {
-                TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / TILE_WIDTH - currentY / TILE_HEIGHT, currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 2);
-                if (!((currentCell != null && currentCell.getTile().
-                        getProperties().containsKey("Water")))) {
-                    //Gdx.app.log("Colliding", "Colliding");
-                    currentX += 3;
-                    currentY += 3;
-                    this.setPosition(currentX, currentY);
-                    currentFrame++;
-                    if (currentFrame > 7) {
-                        currentFrame = 0;
-                    }
-                    currentAtlasKey = String.format("walking ne%04d", currentFrame);
-                    this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
+            if (destinationY > currentY
+                    && !checkCollision(currentX, currentY, collisionLayer, "ne")) {
+                currentX += 3;
+                currentY += 3;
+                this.setPosition(currentX, currentY);
+                currentFrame++;
+                if (currentFrame > 7) {
+                    currentFrame = 0;
                 }
-            } else if (currentY - destinationY > 5) {
-                TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / TILE_WIDTH - currentY / TILE_HEIGHT + 1, currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 1);
-                if (!((currentCell != null && currentCell.getTile().
-                        getProperties().containsKey("Water")))) {
-                    //Gdx.app.log("Colliding", "Colliding");
-                    currentX += 4;
-                    currentY -= 4;
-                    this.setPosition(currentX, currentY);
-                    currentFrame++;
-                    if (currentFrame > 7) {
-                        currentFrame = 0;
-                    }
-                    currentAtlasKey = String.format("walking se%04d", currentFrame);
-                    this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-                }
-            } else {
-                TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / TILE_WIDTH - currentY / TILE_HEIGHT + 1, currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 2);
-                if (!((currentCell != null && currentCell.getTile().
-                        getProperties().containsKey("Water")))) {
-                    //Gdx.app.log("Colliding", "Colliding");
-                    currentX += 3;
+                currentAtlasKey = String.format("walking ne%04d", currentFrame);
+                this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
 
+            } else if (currentY - destinationY > 5
+                    && !checkCollision(currentX, currentY, collisionLayer, "se")) {
+                currentX += 4;
+                currentY -= 4;
+                this.setPosition(currentX, currentY);
+                currentFrame++;
+                if (currentFrame > 7) {
+                    currentFrame = 0;
+                }
+                currentAtlasKey = String.format("walking se%04d", currentFrame);
+                this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
+
+            } else {
+                if (!checkCollision(currentX, currentY, collisionLayer, "e")) {
+                    currentX += 3;
                     this.setPosition(currentX, currentY);
                     currentFrame++;
                     if (currentFrame > 7) {
@@ -116,49 +116,32 @@ public class CharacterMovement extends Sprite {
                     this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
                 }
             }
-
-        }
-        else if (currentX - destinationX > 5) {
-            if (destinationY - currentY > 5) {
-                TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / TILE_WIDTH - currentY / TILE_HEIGHT - 1, currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 1);
-                if (!((currentCell != null && currentCell.getTile().
-                        getProperties().containsKey("Water")))) {
-                    //Gdx.app.log("Colliding", "Colliding");
-                    currentX -= 4;
-                    currentY += 4;
-                    this.setPosition(currentX, currentY);
-                    currentFrame++;
-                    if (currentFrame > 7) {
-                        currentFrame = 0;
-                    }
-                    currentAtlasKey = String.format("walking nw%04d", currentFrame);
-                    this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
+        } else if (currentX - destinationX > 5) {
+            if (destinationY - currentY > 5
+                    && !checkCollision(currentX, currentY, collisionLayer, "nw")) {
+                currentX -= 4;
+                currentY += 4;
+                this.setPosition(currentX, currentY);
+                currentFrame++;
+                if (currentFrame > 7) {
+                    currentFrame = 0;
                 }
+                currentAtlasKey = String.format("walking nw%04d", currentFrame);
+                this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
 
-            } else if (currentY - destinationY > 5) {
-                TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / TILE_WIDTH - currentY / TILE_HEIGHT, currentX / TILE_WIDTH + currentY / TILE_HEIGHT);
-                if (!((currentCell != null && currentCell.getTile().
-                        getProperties().containsKey("Water")))) {
-                    //Gdx.app.log("Colliding", "Colliding");
-                    currentX -= 3;
-                    currentY -= 3;
-                    this.setPosition(currentX, currentY);
-                    currentFrame++;
-                    if (currentFrame > 7) {
-                        currentFrame = 0;
-                    }
-                    currentAtlasKey = String.format("walking sw%04d", currentFrame);
-                    this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
+            } else if (currentY - destinationY > 5
+                    && !checkCollision(currentX, currentY, collisionLayer, "sw")) {
+                currentX -= 3;
+                currentY -= 3;
+                this.setPosition(currentX, currentY);
+                currentFrame++;
+                if (currentFrame > 7) {
+                    currentFrame = 0;
                 }
-
+                currentAtlasKey = String.format("walking sw%04d", currentFrame);
+                this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
             } else {
-                TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX /TILE_WIDTH - currentY / TILE_HEIGHT - 1, currentX / TILE_WIDTH + currentY /TILE_HEIGHT);
-                if (!((currentCell != null && currentCell.getTile().
-                        getProperties().containsKey("Water")))) {
-                    //Gdx.app.log("Colliding", "Colliding");
+                if (!checkCollision(currentX, currentY, collisionLayer, "w")) {
                     currentX -= 4;
                     this.setPosition(currentX, currentY);
                     currentFrame++;
@@ -167,17 +150,12 @@ public class CharacterMovement extends Sprite {
                     }
                     currentAtlasKey = String.format("walking w%04d", currentFrame);
                     this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
+
                 }
             }
-        }
-        else if (Math.abs(destinationX - currentX) <= 10) {
-            //-------Up-----------
-            if (destinationY - currentY > 1) {
-                TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / TILE_WIDTH - currentY / TILE_HEIGHT - 1, currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 2);
-                if (!((currentCell != null && currentCell.getTile().
-                        getProperties().containsKey("Water")))) {
-                    //Gdx.app.log("Colliding", "Colliding");
+        } else if (Math.abs(destinationX - currentX) <= 10) {
+            if (destinationY - currentY > 1
+                    && !checkCollision(currentX, currentY, collisionLayer, "n")) {
                     currentY += 4;
                     this.setPosition(currentX, currentY);
                     currentFrame++;
@@ -186,25 +164,16 @@ public class CharacterMovement extends Sprite {
                     }
                     currentAtlasKey = String.format("walking n%04d", currentFrame);
                     this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
-                }
-
-            //-----Down------
-            } else if (currentY - destinationY > 5) {
-                TiledMapTileLayer.Cell currentCell = collisionLayer
-                        .getCell(currentX / TILE_WIDTH- currentY / TILE_HEIGHT + 1, currentX / TILE_WIDTH + currentY / TILE_HEIGHT);
-                    if (!((currentCell != null && currentCell.getTile().
-                            getProperties().containsKey("Water")))) {
-                        //Gdx.app.log("Colliding", "Colliding");
-                        currentY -= 4;
-                        this.setPosition(currentX, currentY);
-                        currentFrame++;
-                        if (currentFrame > 7) {
-                            currentFrame = 0;
-                        }
-                        currentAtlasKey = String.format("walking s%04d", currentFrame);
-                        this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
+            } else if (currentY - destinationY > 5
+                    && !checkCollision(currentX, currentY, collisionLayer, "s")) {
+                    currentY -= 4;
+                    this.setPosition(currentX, currentY);
+                    currentFrame++;
+                    if (currentFrame > 7) {
+                        currentFrame = 0;
                     }
-
+                    currentAtlasKey = String.format("walking s%04d", currentFrame);
+                    this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
             } else {
                 currentAtlasKey = currentAtlasKey.replaceAll("walking", "looking");
 
@@ -213,3 +182,4 @@ public class CharacterMovement extends Sprite {
         }
     }
 }
+
