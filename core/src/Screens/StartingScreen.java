@@ -1,5 +1,6 @@
 package Screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -10,10 +11,11 @@ public class StartingScreen implements Screen {
     private SpriteBatch batch;
     private Texture ttrSplash;
 
-    public StartingScreen() {
+
+    public StartingScreen(Game game) {
         super();
         batch = new SpriteBatch();
-        ttrSplash = new Texture("splash-screen.png");
+        ttrSplash = new Texture("core/assets/map/start.png");
     }
 
     @Override
