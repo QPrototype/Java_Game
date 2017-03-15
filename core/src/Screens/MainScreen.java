@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.maps.MapLayers;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -17,6 +19,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.MainGame.MainGame;
+import sun.misc.resources.Messages_pt_BR;
 
 public class MainScreen implements Screen {
 
@@ -35,11 +38,13 @@ public class MainScreen implements Screen {
     private TiledMap map;
     private IsometricTiledMapRenderer mapRenderer;
 
+
     //Sprites
     private SpriteBatch batch;
     private TextureAtlas walkingAtlas;
     private TextureAtlas lookingAtlas;
     private CharacterMovement sprite;
+    private MapObject mapObject;
 
     //movement
     private float destinationX = -1;
@@ -58,23 +63,23 @@ public class MainScreen implements Screen {
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         //Map
-        map = new TmxMapLoader().load("core/assets/map/testingmap.tmx");
+        map = new TmxMapLoader().load("core/assets/map/GameMap.tmx");
         mapRenderer = new IsometricTiledMapRenderer(map);
 
         TiledMapTileLayer layer0 = (TiledMapTileLayer) map.getLayers().get(0);
-        Vector3 center = new Vector3(layer0.getWidth() * layer0.getTileWidth()
-                / 2, layer0.getHeight() * layer0.getTileHeight() / 2, 0);
+
+        Vector3 center = new Vector3(layer0.getWidth() * layer0.getTileWidth() / 2, layer0.getHeight() * layer0.getTileHeight() / 2, 100);
         MapLayers layers = map.getLayers();
         camera.position.set(center);
-
-
 
         TextureAtlas.AtlasRegion region = walkingAtlas.findRegion("walking e0000");
         sprite = new CharacterMovement(walkingAtlas, lookingAtlas, region, (TiledMapTileLayer) layers.get(0));
 
 
-        //sprite.setPosition(250, 100);
-        sprite.scale(0.1f);
+
+
+
+        sprite.scale(0.05f);
         Timer.schedule(new Timer.Task() {
                            @Override
                            public void run() {
@@ -100,6 +105,7 @@ public class MainScreen implements Screen {
 
     private void handleInput() {
         //controlling camera
+
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             camera.translate(-10, 0, 0);
         }
@@ -139,18 +145,20 @@ public class MainScreen implements Screen {
             destinationY = clickOnScreen.y - 10;
             //System.out.println(clickOnScreen.x + " : " + clickOnScreen.y);
             //y = mapHeight - tilesize - y
-
-            //-----------
         }
-        //map stufff
-        handleInput();
-        mapRenderer.setView(camera);
-        mapRenderer.render();
 
-        //---------------
+        int[] backgroundLayers = { 0 }; // don't allocate every frame!
+        int[] foregroundLayers = { 1, 2};    // don't allocate every frame!
+        handleInput();
+
+        mapRenderer.render(backgroundLayers);
+        mapRenderer.setView(camera);
+
         batch.begin();
         sprite.draw(batch);
         batch.end();
+
+        mapRenderer.render(foregroundLayers);
     }
 
     @Override
