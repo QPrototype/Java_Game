@@ -44,7 +44,6 @@ public class MainScreen implements Screen {
     private TextureAtlas walkingAtlas;
     private TextureAtlas lookingAtlas;
     private CharacterMovement sprite;
-    private MapObject mapObject;
 
     //movement
     private float destinationX = -1;
@@ -68,12 +67,13 @@ public class MainScreen implements Screen {
 
         TiledMapTileLayer layer0 = (TiledMapTileLayer) map.getLayers().get(0);
 
-        Vector3 center = new Vector3(layer0.getWidth() * layer0.getTileWidth() / 2, layer0.getHeight() * layer0.getTileHeight() / 2, 100);
+        Vector3 center = new Vector3(layer0.getWidth() * layer0.getTileWidth() / 2,
+                layer0.getHeight() * layer0.getTileHeight() / 2, 0);
         MapLayers layers = map.getLayers();
         camera.position.set(center);
 
         TextureAtlas.AtlasRegion region = walkingAtlas.findRegion("walking e0000");
-        sprite = new CharacterMovement(walkingAtlas, lookingAtlas, region, (TiledMapTileLayer) layers.get(0));
+        sprite = new CharacterMovement();
 
 
 
