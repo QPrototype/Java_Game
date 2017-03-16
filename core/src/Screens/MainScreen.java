@@ -65,7 +65,7 @@ public class MainScreen implements Screen {
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         //Map
-        map = new TmxMapLoader().load("core/assets/map/GameMap.tmx");
+        map = new TmxMapLoader().load("core/assets/map/Map_example.tmx");
         mapRenderer = new IsometricTiledMapRenderer(map);
 
         TiledMapTileLayer layer0 = (TiledMapTileLayer) map.getLayers().get(0);
@@ -151,7 +151,7 @@ public class MainScreen implements Screen {
         }
 
         int[] backgroundLayers = { 0 }; // don't allocate every frame!
-        int[] foregroundLayers = { 1, 2};    // don't allocate every frame!
+        int[] foregroundLayers = { 1 };    // don't allocate every frame!
         handleInput();
 
         mapRenderer.render(backgroundLayers);
