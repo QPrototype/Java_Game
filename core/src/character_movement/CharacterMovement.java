@@ -78,7 +78,7 @@ public class CharacterMovement extends Sprite {
             x++;
         }
         if (type.equals("worker")) {
-            TiledMapTileLayer.Cell terrain = background.getCell(x, y);
+            TiledMapTileLayer.Cell terrain = foreground.getCell(x, y);
             if (terrain != null && terrain.getTile().
                     getProperties().containsKey("Tree")) {
                 return "cut";
