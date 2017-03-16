@@ -73,7 +73,7 @@ public class MainScreen implements Screen {
         camera.position.set(center);
 
         TextureAtlas.AtlasRegion region = walkingAtlas.findRegion("walking e0000");
-        sprite = new CharacterMovement();
+        sprite = new CharacterMovement("fighter", walkingAtlas, lookingAtlas, region, map);
 
 
 

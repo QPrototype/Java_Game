@@ -19,7 +19,7 @@ public class CharacterMovement extends Sprite {
     private int currentFrame = 1;
     private String currentAtlasKey;
     private int currentX = 800;
-    private int currentY = 0;
+    private int currentY = 600;
 
     private TiledMap map;
     private TiledMapTileLayer background;
