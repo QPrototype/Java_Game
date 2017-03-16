@@ -43,6 +43,7 @@ public class MainScreen implements Screen {
     private SpriteBatch batch;
     private TextureAtlas walkingAtlas;
     private TextureAtlas lookingAtlas;
+    private TextureAtlas cuttingAtlas;
     private CharacterMovement sprite;
     private MapObject mapObject;
 
@@ -57,6 +58,8 @@ public class MainScreen implements Screen {
         batch = new SpriteBatch();
         walkingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/walking.atlas"));
         lookingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/looking.atlas"));
+        cuttingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/cutting.atlas"));
+
 
         //Camera
         camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
@@ -73,7 +76,7 @@ public class MainScreen implements Screen {
         camera.position.set(center);
 
         TextureAtlas.AtlasRegion region = walkingAtlas.findRegion("walking e0000");
-        sprite = new CharacterMovement("fighter", walkingAtlas, lookingAtlas, region, map);
+        sprite = new CharacterMovement("fighter", walkingAtlas, lookingAtlas, cuttingAtlas, region, map);
 
 
 

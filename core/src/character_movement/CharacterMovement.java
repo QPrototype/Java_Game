@@ -28,12 +28,13 @@ public class CharacterMovement extends Sprite {
     private String type;
 
 
-    public CharacterMovement(String type, TextureAtlas walkingAtlas, TextureAtlas lookingAtlas, TextureAtlas.AtlasRegion region,
+    public CharacterMovement(String type, TextureAtlas walkingAtlas, TextureAtlas lookingAtlas, TextureAtlas cuttingAtlas, TextureAtlas.AtlasRegion region,
                              TiledMap map) {
         super(new Sprite(region));
 
         this.walkingAtlas = walkingAtlas;
         this.lookingAtlas = lookingAtlas;
+        this.cuttingAtlas = cuttingAtlas;
         this.map = map;
         this.setPosition(currentX, currentY);
         this.background = (TiledMapTileLayer) map.getLayers().get(0);
@@ -101,19 +102,28 @@ public class CharacterMovement extends Sprite {
         if (destinationX - currentX > 5) {
             if (destinationY > currentY
                     && !checkCollision("ne").equals("water")) {
-                /*if (checkCollision("ne").equals("cut")) {
+                if (checkCollision("ne").equals("cut")) {
                     cutTree("ne");
-                }*/
+                    return;
+                }
                 currentX += 3;
                 currentY += 3;
                 changeFrame("ne");
             } else if (currentY - destinationY > 5
                     && !checkCollision("se").equals("water")) {
+                if (checkCollision("se").equals("cut")) {
+                    cutTree("se");
+                    return;
+                }
                 currentX += 4;
                 currentY -= 4;
                 changeFrame("se");
             } else {
                 if (!checkCollision("e").equals("water")) {
+                    if (checkCollision("e").equals("cut")) {
+                        cutTree("e");
+                        return;
+                    }
                     currentX += 3;
                     this.setPosition(currentX, currentY);
                     changeFrame("e");
@@ -122,16 +132,28 @@ public class CharacterMovement extends Sprite {
         } else if (currentX - destinationX > 5) {
             if (destinationY - currentY > 5
                     && !checkCollision("nw").equals("water")) {
+                if (checkCollision("nw").equals("cut")) {
+                    cutTree("nw");
+                    return;
+                }
                 currentX -= 4;
                 currentY += 4;
                 changeFrame("nw");
             } else if (currentY - destinationY > 5
                     && !checkCollision("sw").equals("water")) {
+                if (checkCollision("sw").equals("cut")) {
+                    cutTree("sw");
+                    return;
+                }
                 currentX -= 3;
                 currentY -= 3;
                 changeFrame("sw");
             } else {
                 if (!checkCollision("w").equals("water")) {
+                    if (checkCollision("w").equals("cut")) {
+                        cutTree("w");
+                        return;
+                    }
                     currentX -= 4;
                     changeFrame("w");
                 }
@@ -139,10 +161,18 @@ public class CharacterMovement extends Sprite {
         } else if (Math.abs(destinationX - currentX) <= 5) {
             if (destinationY - currentY > 1
                     && !checkCollision("n").equals("water")) {
+                if (checkCollision("n").equals("cut")) {
+                    cutTree("n");
+                    return;
+                }
                     currentY += 4;
                     changeFrame("n");
             } else if (currentY - destinationY > 5
                     && !checkCollision("s").equals("water")) {
+                if (checkCollision("s").equals("cut")) {
+                    cutTree("s");
+                    return;
+                }
                     currentY -= 4;
                     changeFrame("s");
             } else {
