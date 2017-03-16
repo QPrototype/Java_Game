@@ -43,9 +43,7 @@ public class MainScreen implements Screen {
     private SpriteBatch batch;
     private TextureAtlas walkingAtlas;
     private TextureAtlas lookingAtlas;
-    private TextureAtlas cuttingAtlas;
     private CharacterMovement sprite;
-    private MapObject mapObject;
 
     //movement
     private float destinationX = -1;
@@ -58,8 +56,6 @@ public class MainScreen implements Screen {
         batch = new SpriteBatch();
         walkingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/walking.atlas"));
         lookingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/looking.atlas"));
-        cuttingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/cutting.atlas"));
-
 
         //Camera
         camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
@@ -71,12 +67,13 @@ public class MainScreen implements Screen {
 
         TiledMapTileLayer layer0 = (TiledMapTileLayer) map.getLayers().get(0);
 
-        Vector3 center = new Vector3(layer0.getWidth() * layer0.getTileWidth() / 2, layer0.getHeight() * layer0.getTileHeight() / 2, 100);
+        Vector3 center = new Vector3(layer0.getWidth() * layer0.getTileWidth() / 2,
+                layer0.getHeight() * layer0.getTileHeight() / 2, 0);
         MapLayers layers = map.getLayers();
         camera.position.set(center);
 
         TextureAtlas.AtlasRegion region = walkingAtlas.findRegion("walking e0000");
-        sprite = new CharacterMovement("fighter", walkingAtlas, lookingAtlas, cuttingAtlas, region, map);
+        sprite = new CharacterMovement("fighter", walkingAtlas, lookingAtlas, region, map);
 
 
 
