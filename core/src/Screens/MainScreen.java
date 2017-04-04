@@ -88,7 +88,7 @@ public class MainScreen implements Screen {
 
 
 
-        sprite.scale(0.05f);
+        sprite.scale(0.1f);
         Timer.schedule(new Timer.Task() {
                            @Override
                            public void run() {
