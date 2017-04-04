@@ -65,13 +65,15 @@ public class MainScreen implements Screen {
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         //Map
-        map = new TmxMapLoader().load("core/assets/map/Map_example.tmx");
+        map = new TmxMapLoader().load("core/assets/map/Map_example1.tmx");
+        //map = new TmxMapLoader().load("core/assets/map/water_collision.tmx");
+
         mapRenderer = new IsometricTiledMapRenderer(map);
 
         TiledMapTileLayer layer0 = (TiledMapTileLayer) map.getLayers().get(0);
 
         Vector3 center = new Vector3(layer0.getWidth() * layer0.getTileWidth() / 2,
-                layer0.getHeight() * layer0.getTileHeight() / 2, 0);
+                layer0.getHeight() * layer0.getTileHeight() / 3, 0);
         MapLayers layers = map.getLayers();
         camera.position.set(center);
 
