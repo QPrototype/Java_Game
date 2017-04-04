@@ -1,5 +1,6 @@
 package Screens;
 
+import Scenes.Hud;
 import character_movement.CharacterMovement;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,9 +9,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.maps.MapLayers;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -19,7 +18,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.MainGame.MainGame;
-import sun.misc.resources.Messages_pt_BR;
 
 public class MainScreen implements Screen {
 
@@ -29,8 +27,8 @@ public class MainScreen implements Screen {
     private TextureAtlas atlas;
 
     // screen variables
-    private int WORLD_WIDTH = 1600;
-    private int WORLD_HEIGHT = 800;
+    public int WORLD_WIDTH = 1600;
+    public int WORLD_HEIGHT = 800;
     private Viewport viewport;
     private OrthographicCamera camera;
 
@@ -40,6 +38,7 @@ public class MainScreen implements Screen {
 
 
     //Sprites
+    private SpriteBatch hudBatch;
     private SpriteBatch batch;
     private TextureAtlas walkingAtlas;
     private TextureAtlas lookingAtlas;
@@ -50,15 +49,20 @@ public class MainScreen implements Screen {
     private float destinationX = -1;
     private float destinationY = -1;
 
+    //Hud
+    private Hud hud;
+
     public MainScreen(MainGame game) {
         this.game = game;
 
         //SpriteBatch.
         batch = new SpriteBatch();
+        hudBatch = new SpriteBatch();
         walkingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/walking.atlas"));
         lookingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/looking.atlas"));
         cuttingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/cutting.atlas"));
 
+        hud = new Hud(hudBatch);
 
         //Camera
         camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
@@ -133,7 +137,10 @@ public class MainScreen implements Screen {
     public void render(float delta) {
 
         camera.update();
+        hud.update(delta);
+
         batch.setProjectionMatrix(camera.combined);
+
 
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -160,6 +167,9 @@ public class MainScreen implements Screen {
         batch.begin();
         sprite.draw(batch);
         batch.end();
+
+        batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.stage.draw();
 
         mapRenderer.render(foregroundLayers);
     }
