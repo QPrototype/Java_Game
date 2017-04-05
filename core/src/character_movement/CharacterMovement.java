@@ -54,6 +54,7 @@ public class CharacterMovement extends Sprite {
     }
 
     public String checkCollision(String direction) {
+        boolean cutting = false;
         int x = currentX / TILE_WIDTH - currentY / TILE_HEIGHT + 1;
         int y = currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 1;
         if (direction.equals("ne")) {
@@ -85,6 +86,30 @@ public class CharacterMovement extends Sprite {
             TiledMapTileLayer.Cell terrain = background.getCell(x, y);
             if (terrain != null && terrain.getTile().
                     getProperties().containsKey("trunk")) {
+                //System.out.println(x);
+                //System.out.println(y);
+                foreground.setCell(x, y, null);
+                foreground.setCell(x + 1, y + 1, null);
+                foreground.setCell(x + 2, y + 1, null);
+
+                //foreground.setCell(x + 1, y, null);
+                //foreground.setCell(x, y + 1, null);
+                //foreground.setCell(x, y + 2, null);
+                //foreground.setCell(x, y + 3, null);
+                //foreground.setCell(x, y + 4, null);
+                //foreground.setCell(x, y + 5, null);
+                //foreground.setCell(x + 1, y + 1, null);
+                //foreground.setCell(x + 1, y + 2, null);
+                //foreground.setCell(x, y - 1, null);
+                //foreground.setCell(x + 1, y - 1, null);
+                //foreground.setCell(x - 1, y - 1, null);
+                //foreground.setCell(x - 1, y, null);
+                //foreground.setCell(x - 2, y, null);
+                //foreground.setCell(x - 1, y + 1, null);
+                //foreground.setCell(x - 2, y + 1, null);
+                //foreground.setCell(x - 1, y + 2, null);
+
+                cutting = true;
                 return "cut";
             }
         }
@@ -101,9 +126,10 @@ public class CharacterMovement extends Sprite {
             //System.out.printf("x:  %s ,  y:  %s", x, y);
             //System.out.printf("Currentx:  %s ,  Currenty:  %s\n", currentX / TILE_WIDTH - currentY / TILE_HEIGHT,
             //currentX / TILE_WIDTH + currentY / TILE_HEIGHT);
-
+            cutting = false;
             return "water";
         }
+        cutting = false;
         return "move on.";
     }
 
