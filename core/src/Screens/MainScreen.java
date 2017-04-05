@@ -1,6 +1,6 @@
 package Screens;
 
-import Scenes.Hud;
+import Scenes.GameHud;
 import character_movement.CharacterMovement;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -21,14 +21,13 @@ import com.mygdx.MainGame.MainGame;
 
 public class MainScreen implements Screen {
 
-
     // Reference to game.
     private MainGame game;
     private TextureAtlas atlas;
 
     // screen variables
-    public int WORLD_WIDTH = 1600;
-    public int WORLD_HEIGHT = 800;
+    public static final int WORLD_WIDTH = 1600;
+    public static final int WORLD_HEIGHT = 800;
     private Viewport viewport;
     private OrthographicCamera camera;
 
@@ -49,8 +48,8 @@ public class MainScreen implements Screen {
     private float destinationX = -1;
     private float destinationY = -1;
 
-    //Hud
-    private Hud hud;
+
+    private GameHud gameHud;
 
     public MainScreen(MainGame game) {
         this.game = game;
@@ -58,11 +57,12 @@ public class MainScreen implements Screen {
         //SpriteBatch.
         batch = new SpriteBatch();
         hudBatch = new SpriteBatch();
+
         walkingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/walking.atlas"));
         lookingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/looking.atlas"));
         cuttingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/cutting.atlas"));
 
-        hud = new Hud(hudBatch);
+        gameHud = new GameHud(hudBatch);
 
         //Camera
         camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
@@ -139,7 +139,10 @@ public class MainScreen implements Screen {
     public void render(float delta) {
 
         camera.update();
-        hud.update(delta);
+
+
+        gameHud.update(delta);
+
 
         batch.setProjectionMatrix(camera.combined);
 
@@ -170,10 +173,12 @@ public class MainScreen implements Screen {
         sprite.draw(batch);
         batch.end();
 
-        batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.stage.draw();
-
         mapRenderer.render(foregroundLayers);
+
+        //render & draw hud
+        batch.setProjectionMatrix(gameHud.stage.getCamera().combined);
+        gameHud.stage.draw();
+
     }
 
     @Override
