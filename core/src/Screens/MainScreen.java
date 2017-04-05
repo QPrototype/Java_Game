@@ -21,7 +21,7 @@ import com.mygdx.MainGame.MainGame;
 
 public class MainScreen implements Screen {
 
-    // Reference to game.
+
     private MainGame game;
     private TextureAtlas atlas;
 
