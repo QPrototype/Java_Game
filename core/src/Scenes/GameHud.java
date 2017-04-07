@@ -98,11 +98,9 @@ public class GameHud {
 
         countdownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
         scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-        mapLabel = new Label("Minimap goes here, mby ?", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
         unitActivitiesLabel = new Label("Selected Unit Activites", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 
         unitActivitiesLabel.setFontScale(2);
-        mapLabel.setFontScale(2);
         scoreLabel.setFontScale(2);
         countdownLabel.setFontScale(2);
 
@@ -132,17 +130,16 @@ public class GameHud {
 
         //Map table
         map = new Table();
-        map.add(mapLabel);
 
         // Confiqure root table.
         root = new Table();
         root.bottom();
-        root.setSize(MainScreen.WORLD_WIDTH, MainScreen.WORLD_HEIGHT / 8);
+        root.setSize(MainScreen.WORLD_WIDTH, MainScreen.WORLD_HEIGHT / 7);
         root.setBackground(drawable);
 
 
         // Add sub tables to root table.
-        root.add(unitImgTable).width(150).height(MainScreen.WORLD_HEIGHT / 8);
+        root.add(unitImgTable).width(150).height(MainScreen.WORLD_HEIGHT / 7);
         root.add(resourceTable).width(200).expandY();
         root.add(unitActivitiesTable).width(300).expandY();
         root.add(map).expandX().expandY();
@@ -173,6 +170,8 @@ public class GameHud {
         score += value;
         scoreLabel.setText(String.format("%06d", score));
     }
+
+
 
     public boolean isTimeUp() {
         return timeUp;
