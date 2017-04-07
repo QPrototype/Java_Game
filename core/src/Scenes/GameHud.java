@@ -27,14 +27,14 @@ public class GameHud {
 
 
     //score && time tracking variables
-    private Integer worldTimer;
+    public static int worldTimer;
     private float timeCount;
     private static Integer score;
     private boolean timeUp;
     private Label countdownLabel, timeLabel, linkLabel, unitActivitiesLabel, mapLabel;
     private Label woodLabel, foodLabel, goldLabel;
 
-    public int woodCount, foodCount, goldCount;
+    public static int woodCount, foodCount, goldCount;
 
     private static Label scoreLabel;
 
@@ -151,6 +151,7 @@ public class GameHud {
 
     public void update(float dt) {
         timeCount += dt;
+        woodLabel.setText(String.format("Wood: %d", woodCount));
         if (timeCount >= 1) {
             if (worldTimer > 0) {
                 worldTimer--;
@@ -177,11 +178,19 @@ public class GameHud {
         return timeUp;
     }
 
+    public static int getTime() {
+        return worldTimer;
+    }
+
     public static Label getScoreLabel() {
         return scoreLabel;
     }
 
     public static Integer getScore() {
         return score;
+    }
+
+    public static void addWood(int amount) {
+        woodCount += amount;
     }
 }
