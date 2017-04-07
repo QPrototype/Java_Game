@@ -1,9 +1,14 @@
 package character_movement;
 
+import Screens.MainScreen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import Scenes.GameHud;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
+
 
 
 public class CharacterMovement extends Sprite {
@@ -28,6 +33,16 @@ public class CharacterMovement extends Sprite {
     private String type;
 
 
+    public static int cutStart = -1;
+    public static int cutEnd = -1;
+    public TiledMapTile current;
+    public TiledMapTileSet pine;
+    public TiledMapTileLayer.Cell cut;
+    public TiledMapTileSet grass_water;
+    public TiledMapTile grass;
+
+
+
     public CharacterMovement(String type, TextureAtlas walkingAtlas, TextureAtlas lookingAtlas, TextureAtlas cuttingAtlas, TextureAtlas.AtlasRegion region,
                              TiledMap map) {
         super(new Sprite(region));
@@ -40,6 +55,10 @@ public class CharacterMovement extends Sprite {
         this.background = (TiledMapTileLayer) map.getLayers().get(0);
         this.foreground = (TiledMapTileLayer) map.getLayers().get(1);
         this.type = type;
+        this.grass_water = map.getTileSets().getTileSet("grass_water");
+        //this.grass = grass_water.getTile(1);
+        //this.pine = map.getTileSets().getTileSet("pine");
+        //System.out.println(pine.getProperties().containsKey("suur"));
 
 
         //this.sprite = sprite;
@@ -54,7 +73,6 @@ public class CharacterMovement extends Sprite {
     }
 
     public String checkCollision(String direction) {
-        boolean cutting = false;
         int x = currentX / TILE_WIDTH - currentY / TILE_HEIGHT + 1;
         int y = currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 1;
         if (direction.equals("ne")) {
@@ -86,50 +104,44 @@ public class CharacterMovement extends Sprite {
             TiledMapTileLayer.Cell terrain = background.getCell(x, y);
             if (terrain != null && terrain.getTile().
                     getProperties().containsKey("trunk")) {
-                //System.out.println(x);
-                //System.out.println(y);
-                foreground.setCell(x, y, null);
-                foreground.setCell(x + 1, y + 1, null);
-                foreground.setCell(x + 2, y + 1, null);
 
-                //foreground.setCell(x + 1, y, null);
-                //foreground.setCell(x, y + 1, null);
-                //foreground.setCell(x, y + 2, null);
-                //foreground.setCell(x, y + 3, null);
-                //foreground.setCell(x, y + 4, null);
-                //foreground.setCell(x, y + 5, null);
-                //foreground.setCell(x + 1, y + 1, null);
-                //foreground.setCell(x + 1, y + 2, null);
-                //foreground.setCell(x, y - 1, null);
-                //foreground.setCell(x + 1, y - 1, null);
-                //foreground.setCell(x - 1, y - 1, null);
-                //foreground.setCell(x - 1, y, null);
-                //foreground.setCell(x - 2, y, null);
-                //foreground.setCell(x - 1, y + 1, null);
-                //foreground.setCell(x - 2, y + 1, null);
-                //foreground.setCell(x - 1, y + 2, null);
 
-                cutting = true;
+                cut = foreground.getCell(x - 1, y - 3);
+
+                if (cut.getTile() != null && cut.getTile().getProperties().containsKey("suur")) {
+                    if (cutStart == -1) {
+                        cutStart = GameHud.getTime();
+                    }
+                }
+                if (cut.getTile() != null && cut.getTile().getProperties().containsKey("suur")) {
+                    if (cutStart - 3 > GameHud.getTime()) {
+                        current = cut.getTile();
+
+                        cut.setTile(null);
+                        cutStart = -1;
+                        terrain.setTile(map.getTileSets().getTileSet("isometric_grass_and_water").getTile(2));
+
+                        //Add wood
+                        GameHud.addWood(20);
+                    }
+                }
                 return "cut";
+            } else {
+                cutStart = -1;
             }
         }
-        //if (type.equals("worker")) {
-        //    TiledMapTileLayer.Cell terrain = foreground.getCell(x, y);
-        //    if (terrain != null && terrain.getTile().
-        //            getProperties().containsKey("Tree")) {
-        //        return "cut";
+        //respawn tree
+        //if (cut != null) {
+        //    if (cut.getTile() == null && cutEnd - 5 > GameHud.getTime()) {
+        //        cut.setTile(current);
         //    }
         //}
+
         TiledMapTileLayer.Cell groundCell = background.getCell(x, y);
         if (groundCell != null && groundCell.getTile().
                 getProperties().containsKey("Water")) {
-            //System.out.printf("x:  %s ,  y:  %s", x, y);
-            //System.out.printf("Currentx:  %s ,  Currenty:  %s\n", currentX / TILE_WIDTH - currentY / TILE_HEIGHT,
-            //currentX / TILE_WIDTH + currentY / TILE_HEIGHT);
-            cutting = false;
             return "water";
         }
-        cutting = false;
         return "move on.";
     }
 

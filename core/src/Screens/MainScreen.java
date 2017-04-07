@@ -49,7 +49,7 @@ public class MainScreen implements Screen {
     private float destinationY = -1;
 
 
-    private GameHud gameHud;
+    public GameHud gameHud;
 
     public MainScreen(MainGame game) {
         this.game = game;
@@ -76,8 +76,8 @@ public class MainScreen implements Screen {
 
         TiledMapTileLayer layer0 = (TiledMapTileLayer) map.getLayers().get(0);
 
-        Vector3 center = new Vector3(layer0.getWidth() * layer0.getTileWidth() / 2,
-                layer0.getHeight() * layer0.getTileHeight() / 3, 0);
+        Vector3 center = new Vector3(layer0.getWidth() * layer0.getTileWidth() / 5,
+                layer0.getHeight() * layer0.getTileHeight() / 7, 0);
         MapLayers layers = map.getLayers();
         camera.position.set(center);
 
@@ -133,6 +133,10 @@ public class MainScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.E)) {
             camera.rotate(0.5f, 0, 0, 1);
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            dispose();
+        }
+
     }
 
     @Override
