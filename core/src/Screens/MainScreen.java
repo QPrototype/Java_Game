@@ -46,7 +46,8 @@ public class MainScreen implements Screen {
     private TextureAtlas lookingAtlas;
     private TextureAtlas cuttingAtlas;
     private CharacterMovement sprite;
-    public static List<CharacterMovement> allUnits = new ArrayList<CharacterMovement>();
+    private CharacterMovement sprite2;
+    public List<CharacterMovement> allUnits = new ArrayList<CharacterMovement>();
 
     //movement
     private float destinationX = -1;
@@ -87,16 +88,25 @@ public class MainScreen implements Screen {
 
         TextureAtlas.AtlasRegion region = walkingAtlas.findRegion("walking e0000");
         sprite = new CharacterMovement("worker", walkingAtlas, lookingAtlas, cuttingAtlas, region, map);
+        sprite2 = new CharacterMovement("fighter", walkingAtlas, lookingAtlas, cuttingAtlas, region, map);
+        allUnits.add(sprite);
+        allUnits.add(sprite2);
+        sprite.setPosition(600, 5);
+        sprite2.setPosition(700, 10);
+        System.out.println(allUnits.size());
+
 
 
 
 
 
         sprite.scale(0.1f);
+        sprite2.scale(0.1f);
         Timer.schedule(new Timer.Task() {
                            @Override
                            public void run() {
-                               sprite.walk(destinationX, destinationY);
+                               sprite.walk();
+                               sprite2.walk();
                            }
                        }
                 , 0, 1 / 30.0f);
@@ -111,7 +121,7 @@ public class MainScreen implements Screen {
     }
 
     //Add unit to the list containing all units
-    public static void addCharacter(CharacterMovement character) {
+    public void addCharacter(CharacterMovement character) {
         allUnits.add(character);
     }
 
@@ -171,10 +181,15 @@ public class MainScreen implements Screen {
             camera.unproject(clickOnScreen);
 
             // Selecting an unit
-            if ((Math.abs(clickOnScreen.x - sprite.getWidth() / 2 - sprite.getCurrentX()) < 20)
-                    && (Math.abs(clickOnScreen.y - sprite.getCurrentY() - 40) < 20)){
-                sprite.select();
+            for (CharacterMovement unit : allUnits) {
+                float x = Math.abs(clickOnScreen.x - unit.getWidth() / 2 - unit.getCurrentX());
+                float y = Math.abs(clickOnScreen.y - unit.getCurrentY() - 40);
+                if (x < 20 && !(x < 0) && y < 20 && !(y < 0)) {
+
+                    unit.select();
+                }
             }
+
 
 
 
@@ -183,15 +198,16 @@ public class MainScreen implements Screen {
             projected.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             if (projected.y < 943) {
                 for (CharacterMovement unit : allUnits) {
-                    if (unit.selected) {
-                        destinationX = clickOnScreen.x - sprite.getWidth() / 2;
-                        destinationY = clickOnScreen.y - 10;
+                    if (unit.getSelected()) {
+                        unit.setDestination(clickOnScreen.x - unit.getWidth() / 2, clickOnScreen.y - 10);
                     }
                 }
             }
 
         } else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-            sprite.unSelect();
+            for (CharacterMovement unit : allUnits) {
+                unit.unSelect();
+            }
         }
 
         int[] backgroundLayers = { 0 }; // don't allocate every frame!
@@ -203,6 +219,7 @@ public class MainScreen implements Screen {
 
         batch.begin();
         sprite.draw(batch);
+        sprite2.draw(batch);
         batch.end();
 
         mapRenderer.render(foregroundLayers);

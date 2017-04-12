@@ -25,6 +25,8 @@ public class CharacterMovement extends Sprite {
     private String currentAtlasKey;
     private int currentX = 600;
     private int currentY = 0;
+    public float destinationX = -1;
+    public float destinationY = -1;
 
     private TiledMap map;
     private TiledMapTileLayer background;
@@ -41,7 +43,7 @@ public class CharacterMovement extends Sprite {
     public TiledMapTileSet grass_water;
     public TiledMapTile grass;
 
-    public boolean selected = false;
+    private boolean selected = false;
 
 
 
@@ -53,11 +55,11 @@ public class CharacterMovement extends Sprite {
         this.lookingAtlas = lookingAtlas;
         this.cuttingAtlas = cuttingAtlas;
         this.map = map;
-        this.setPosition(currentX, currentY);
+        //this.setPosition(currentX, currentY);
         this.background = (TiledMapTileLayer) map.getLayers().get(0);
         this.foreground = (TiledMapTileLayer) map.getLayers().get(1);
         this.type = type;
-        MainScreen.addCharacter(this);
+        //MainScreen.addCharacter(this);
     }
 
     public int getCurrentX() {
@@ -142,8 +144,8 @@ public class CharacterMovement extends Sprite {
     }
 
 
-    public void walk(float destinationX, float destinationY) {
-        if (destinationX == -1 && destinationY == -1) {
+    public void walk() {
+        if (destinationX == -1 || destinationY == -1) {
             return;
         }
         //if (selected) {
@@ -268,6 +270,20 @@ public class CharacterMovement extends Sprite {
 
     public void unSelect() {
         selected = false;
+    }
+
+    public boolean getSelected() {
+        return selected;
+    }
+
+    public void setCurrentXY(int x, int y) {
+        currentX = x;
+        currentY = y;
+    }
+
+    public void setDestination(float x, float y) {
+        destinationX = x;
+        destinationY = y;
     }
 }
 
