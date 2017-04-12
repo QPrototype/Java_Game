@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import javafx.scene.paint.ImagePattern;
 
 public class GameHud {
 
@@ -55,6 +56,7 @@ public class GameHud {
     private Drawable timeBG;
 
     private Image unit;
+    private Image fighterIcon;
 
     public GameHud(SpriteBatch spriteBatch) {
 
@@ -79,6 +81,9 @@ public class GameHud {
         drawable2 = resourceSkin.getDrawable("bg");
         unit = new Image(new Texture("core/assets/screens/gamehud/testunit.png"));
         unit.setScaling(Scaling.stretch);
+        fighterIcon = new Image(new Texture("core/assets/screens/gamehud/fighter_icon.bmp"));
+        fighterIcon.setScale(0.5f, 0.5f);
+
 
         //time----->
         timeSkin = new Skin();
@@ -100,6 +105,8 @@ public class GameHud {
         scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
         mapLabel = new Label("Minimap goes here, mby ?", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
         unitActivitiesLabel = new Label("Selected Unit Activites", new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+
+
 
         unitActivitiesLabel.setFontScale(2);
         mapLabel.setFontScale(2);
@@ -128,7 +135,8 @@ public class GameHud {
 
         // Configuring Selected unit Activities
         unitActivitiesTable = new Table();
-        unitActivitiesTable.add(unitActivitiesLabel).expandX().align(10);
+        //unitActivitiesTable.add(unitActivitiesLabel).expandX().align(10);
+        unitActivitiesTable.add(fighterIcon);
 
         //Map table
         map = new Table();

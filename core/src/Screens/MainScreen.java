@@ -19,6 +19,9 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.MainGame.MainGame;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainScreen implements Screen {
 
     // Reference to game.
@@ -43,6 +46,7 @@ public class MainScreen implements Screen {
     private TextureAtlas lookingAtlas;
     private TextureAtlas cuttingAtlas;
     private CharacterMovement sprite;
+    public static List<CharacterMovement> allUnits = new ArrayList<CharacterMovement>();
 
     //movement
     private float destinationX = -1;
@@ -106,6 +110,10 @@ public class MainScreen implements Screen {
         return map;
     }
 
+    public static void addCharacter(CharacterMovement character) {
+        allUnits.add(character);
+    }
+
 
     @Override
     public void show() {
@@ -160,10 +168,29 @@ public class MainScreen implements Screen {
             Vector3 clickOnScreen = new Vector3();
             clickOnScreen.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(clickOnScreen);
-            destinationX = clickOnScreen.x - sprite.getWidth() / 2;
-            destinationY = clickOnScreen.y - 10;
-            //System.out.println(clickOnScreen.x + " : " + clickOnScreen.y);
-            //y = mapHeight - tilesize - y
+
+            // Selecting an unit
+            if ((Math.abs(clickOnScreen.x - sprite.getWidth() / 2 - sprite.getCurrentX()) < 20)
+                    && (Math.abs(clickOnScreen.y - sprite.getCurrentY() - 40) < 20)){
+                sprite.select();
+            }
+
+
+
+            // For detecting hud
+            Vector3 projected = new Vector3();
+            projected.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            if (projected.y < 943) {
+                for (CharacterMovement unit : allUnits) {
+                    if (unit.selected) {
+                        destinationX = clickOnScreen.x - sprite.getWidth() / 2;
+                        destinationY = clickOnScreen.y - 10;
+                    }
+                }
+            }
+
+        } else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+            sprite.unSelect();
         }
 
         int[] backgroundLayers = { 0 }; // don't allocate every frame!

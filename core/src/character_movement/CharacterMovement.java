@@ -41,6 +41,8 @@ public class CharacterMovement extends Sprite {
     public TiledMapTileSet grass_water;
     public TiledMapTile grass;
 
+    public boolean selected = false;
+
 
 
     public CharacterMovement(String type, TextureAtlas walkingAtlas, TextureAtlas lookingAtlas, TextureAtlas cuttingAtlas, TextureAtlas.AtlasRegion region,
@@ -55,13 +57,7 @@ public class CharacterMovement extends Sprite {
         this.background = (TiledMapTileLayer) map.getLayers().get(0);
         this.foreground = (TiledMapTileLayer) map.getLayers().get(1);
         this.type = type;
-        this.grass_water = map.getTileSets().getTileSet("grass_water");
-        //this.grass = grass_water.getTile(1);
-        //this.pine = map.getTileSets().getTileSet("pine");
-        //System.out.println(pine.getProperties().containsKey("suur"));
-
-
-        //this.sprite = sprite;
+        MainScreen.addCharacter(this);
     }
 
     public int getCurrentX() {
@@ -150,10 +146,11 @@ public class CharacterMovement extends Sprite {
         if (destinationX == -1 && destinationY == -1) {
             return;
         }
-        currentAtlasKey = String.format("looking ne%04d", currentFrame);
+        //if (selected) {
+            currentAtlasKey = String.format("looking ne%04d", currentFrame);
 
-        if (destinationX - currentX > 5) {
-            if (destinationY > currentY) {
+            if (destinationX - currentX > 5) {
+                if (destinationY > currentY) {
                     if (checkCollision("ne").equals("water")) {
                         return;
                     } else if (checkCollision("ne").equals("cut")) {
@@ -163,7 +160,7 @@ public class CharacterMovement extends Sprite {
                     currentX += 3;
                     currentY += 3;
                     changeFrame("ne");
-            } else if (currentY - destinationY > 5) {
+                } else if (currentY - destinationY > 5) {
                     if (checkCollision("se").equals("water")) {
                         return;
                     } else if (checkCollision("se").equals("cut")) {
@@ -171,13 +168,13 @@ public class CharacterMovement extends Sprite {
                         return;
                     }
 
-                currentX += 4;
-                currentY -= 4;
-                changeFrame("se");
-            } else {
-                if (checkCollision("e").equals("water")) {
-                    return;
-                } else if (checkCollision("e").equals("cut")) {
+                    currentX += 4;
+                    currentY -= 4;
+                    changeFrame("se");
+                } else {
+                    if (checkCollision("e").equals("water")) {
+                        return;
+                    } else if (checkCollision("e").equals("cut")) {
                         cutTree("e");
                         return;
                     }
@@ -185,63 +182,63 @@ public class CharacterMovement extends Sprite {
                     this.setPosition(currentX, currentY);
                     changeFrame("e");
                 }
-        } else if (currentX - destinationX > 5) {
-            if (destinationY - currentY > 5) {
-                if (checkCollision("nw").equals("water")) {
-                    return;
-                } else if (checkCollision("nw").equals("cut")) {
-                    cutTree("nw");
-                    return;
+            } else if (currentX - destinationX > 5) {
+                if (destinationY - currentY > 5) {
+                    if (checkCollision("nw").equals("water")) {
+                        return;
+                    } else if (checkCollision("nw").equals("cut")) {
+                        cutTree("nw");
+                        return;
+                    }
+                    currentX -= 4;
+                    currentY += 4;
+                    changeFrame("nw");
+                } else if (currentY - destinationY > 5) {
+                    if (checkCollision("sw").equals("water")) {
+                        return;
+                    } else if (checkCollision("sw").equals("cut")) {
+                        cutTree("sw");
+                        return;
+                    }
+                    currentX -= 3;
+                    currentY -= 3;
+                    changeFrame("sw");
+                } else {
+                    if (checkCollision("w").equals("water")) {
+                        return;
+                    } else if (checkCollision("w").equals("cut")) {
+                        cutTree("w");
+                        return;
+                    }
+                    currentX -= 4;
+                    changeFrame("w");
                 }
-                currentX -= 4;
-                currentY += 4;
-                changeFrame("nw");
-            } else if (currentY - destinationY > 5) {
-                if (checkCollision("sw").equals("water")) {
-                    return;
-                }
-                else if (checkCollision("sw").equals("cut")) {
-                    cutTree("sw");
-                    return;
-                }
-                currentX -= 3;
-                currentY -= 3;
-                changeFrame("sw");
-            } else {
-                if (checkCollision("w").equals("water")) {
-                    return;
-                } else if (checkCollision("w").equals("cut")) {
-                    cutTree("w");
-                    return;
-                }
-                currentX -= 4;
-                changeFrame("w");
-                }
-        } else if (Math.abs(destinationX - currentX) <= 5) {
-            if (destinationY - currentY > 1) {
-                if (checkCollision("n").equals("water")) {
-                    return;
-                } else if (checkCollision("n").equals("cut")) {
-                    cutTree("n");
-                    return;
-                }
+            } else if (Math.abs(destinationX - currentX) <= 5) {
+                if (destinationY - currentY > 1) {
+                    if (checkCollision("n").equals("water")) {
+                        return;
+                    } else if (checkCollision("n").equals("cut")) {
+                        cutTree("n");
+                        return;
+                    }
                     currentY += 4;
                     changeFrame("n");
-            } else if (currentY - destinationY > 5) {
-                if (checkCollision("s").equals("water")) {
-                    return;
-                } else if (checkCollision("s").equals("cut")) {
-                    cutTree("s");
-                    return;
-                }
+                } else if (currentY - destinationY > 5) {
+                    if (checkCollision("s").equals("water")) {
+                        return;
+                    } else if (checkCollision("s").equals("cut")) {
+                        cutTree("s");
+                        return;
+                    }
                     currentY -= 4;
                     changeFrame("s");
-            } else {
-                currentAtlasKey = currentAtlasKey.replaceAll("walking", "looking");
+                } else {
+                    currentAtlasKey = currentAtlasKey.replaceAll("walking", "looking");
 
-                this.setRegion(lookingAtlas.findRegion(currentAtlasKey));
+                    this.setRegion(lookingAtlas.findRegion(currentAtlasKey));
+                }
             }
-        }
+        //}
     }
 
     public void changeFrame(String direction) {
@@ -263,6 +260,14 @@ public class CharacterMovement extends Sprite {
         currentAtlasKey = String.format("felling tree %s%04d", direction, currentFrame);
         this.setRegion(cuttingAtlas.findRegion(currentAtlasKey));
 
+    }
+
+    public void select() {
+        selected = true;
+    }
+
+    public void unSelect() {
+        selected = false;
     }
 }
 
