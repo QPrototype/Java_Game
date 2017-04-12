@@ -23,8 +23,8 @@ public class CharacterMovement extends Sprite {
 
     private int currentFrame = 1;
     private String currentAtlasKey;
-    private int currentX = 600;
-    private int currentY = 0;
+    private int currentX;
+    private int currentY;
     public float destinationX = -1;
     public float destinationY = -1;
 
@@ -284,6 +284,12 @@ public class CharacterMovement extends Sprite {
     public void setDestination(float x, float y) {
         destinationX = x;
         destinationY = y;
+    }
+
+    public void setLocation(int x, int y) {
+        this.setPosition((float) x, (float) y);
+        currentX = x;
+        currentY = y;
     }
 }
 

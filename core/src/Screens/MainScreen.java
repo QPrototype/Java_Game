@@ -91,9 +91,8 @@ public class MainScreen implements Screen {
         sprite2 = new CharacterMovement("fighter", walkingAtlas, lookingAtlas, cuttingAtlas, region, map);
         allUnits.add(sprite);
         allUnits.add(sprite2);
-        sprite.setPosition(600, 5);
-        sprite2.setPosition(700, 10);
-        System.out.println(allUnits.size());
+        sprite.setLocation(600, 5);
+        sprite2.setLocation(700, 10);
 
 
 
