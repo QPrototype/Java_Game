@@ -110,6 +110,7 @@ public class MainScreen implements Screen {
         return map;
     }
 
+    //Add unit to the list containing all units
     public static void addCharacter(CharacterMovement character) {
         allUnits.add(character);
     }
