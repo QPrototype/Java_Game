@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="isometric" renderorder="right-down" width="50" height="50" tilewidth="64" tileheight="32" nextobjectid="1">
- <tileset firstgid="1" source="grass_water.tsx"/>
  <tileset firstgid="25" name="tree3_01" tilewidth="64" tileheight="32" tilecount="2" columns="1">
   <image source="tree3_03.png" width="72" height="65"/>
   <tile id="1">
@@ -108,7 +107,6 @@
    </properties>
   </tile>
  </tileset>
- <tileset firstgid="92" source="pine.tsx"/>
  <tileset firstgid="93" name="isometric_grass_and_water" tilewidth="64" tileheight="32" tilecount="48" columns="4">
   <image source="isometric_grass_and_water.png" width="256" height="384"/>
  </tileset>

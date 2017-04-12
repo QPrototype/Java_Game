@@ -82,7 +82,7 @@ public class MainScreen implements Screen {
         minimapCamera.position.set(-WORLD_WIDTH * 5, 4850, 0);
 
         //Map
-        map = new TmxMapLoader().load("core/assets/map/Map_example1.tmx");
+        map = new TmxMapLoader().load("core/assets/map/Map_example.tmx");
 
         mapRenderer = new IsometricTiledMapRenderer(map);
         minimapRenderer = new IsometricTiledMapRenderer(map);
