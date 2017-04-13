@@ -2,18 +2,23 @@ package Screens;
 
 import Scenes.GameHud;
 import character_movement.CharacterMovement;
+import character_movement.MyInputProcessor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -48,6 +53,12 @@ public class MainScreen implements Screen {
     private CharacterMovement sprite;
     private CharacterMovement sprite2;
     public List<CharacterMovement> allUnits = new ArrayList<CharacterMovement>();
+
+    //unit selection
+    private Rectangle dragging;
+    private Vector3 dragStart;
+    private Vector3 dragEnd;
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     //movement
     private float destinationX = -1;
@@ -167,16 +178,46 @@ public class MainScreen implements Screen {
 
 
         batch.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
 
 
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
+
+        if (dragging != null) {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(5, 0.5F, 0.5F, 1);
+            shapeRenderer.line(dragging.x, dragging.y, dragging.getWidth(), dragging.getHeight());
+            shapeRenderer.end();
+        }
+
+
+
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            MyInputProcessor inputProcessor = new MyInputProcessor();
+            Gdx.input.setInputProcessor(inputProcessor);
+
+            if (inputProcessor.touchDown(Gdx.input.getX(), Gdx.input.getY(), 0, 0)) {
+                dragStart.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                camera.unproject(dragStart);
+            }
+            if (inputProcessor.touchUp(Gdx.input.getX(), Gdx.input.getY(), 0, 0)) {
+                dragStart.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                camera.unproject(dragEnd);
+            }
+            if (dragStart != dragEnd) {
+                dragging = new Rectangle(dragStart.x, dragStart.y,
+                        Math.abs(dragStart.x - dragEnd.x), Math.abs(dragStart.y - dragEnd.y));
+                //Texture rect = new Texture(dragging)
+            }
             //projection to world coords
             Vector3 clickOnScreen = new Vector3();
             clickOnScreen.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+
+
             camera.unproject(clickOnScreen);
 
             // Selecting an unit
@@ -188,8 +229,6 @@ public class MainScreen implements Screen {
                     unit.select();
                 }
             }
-
-
 
 
             // For detecting hud
@@ -219,6 +258,7 @@ public class MainScreen implements Screen {
         batch.begin();
         sprite.draw(batch);
         sprite2.draw(batch);
+        //batch.draw(dragging, (float)dragStart.x, (float)dragStart.y, dragging.getWidth(), dragging.getHeight());
         batch.end();
 
         mapRenderer.render(foregroundLayers);
