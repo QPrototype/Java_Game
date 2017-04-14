@@ -6,6 +6,7 @@ import character_movement.MyInputProcessor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.MainGame.MainGame;
@@ -36,6 +38,8 @@ public class MainScreen implements Screen {
     // screen variables
     public static final int WORLD_WIDTH = 1600;
     public static final int WORLD_HEIGHT = 800;
+    private static final int MINIMAP_X = -8000;
+    private static final int MINIMAP_Y = 4830;
     private Viewport viewport;
     private OrthographicCamera camera;
 
@@ -64,6 +68,11 @@ public class MainScreen implements Screen {
     private float destinationX = -1;
     private float destinationY = -1;
 
+    // Minimap
+    private IsometricTiledMapRenderer minimapRenderer;
+    private OrthographicCamera minimapCamera;
+    private SpriteBatch minimapSb;
+
 
     public GameHud gameHud;
 
@@ -73,6 +82,7 @@ public class MainScreen implements Screen {
         //SpriteBatch.
         batch = new SpriteBatch();
         hudBatch = new SpriteBatch();
+        minimapSb = new SpriteBatch();
 
         walkingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/walking.atlas"));
         lookingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/looking.atlas"));
@@ -82,13 +92,20 @@ public class MainScreen implements Screen {
 
         //Camera
         camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
+        camera.zoom = 2;
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        // minimap camera
+        minimapCamera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
+        minimapCamera.zoom = 14;
+        minimapCamera.position.set(new Vector3(MINIMAP_X, MINIMAP_Y,0));
 
         //Map
         map = new TmxMapLoader().load("core/assets/map/Map_example1.tmx");
         //map = new TmxMapLoader().load("core/assets/map/water_collision.tmx");
 
         mapRenderer = new IsometricTiledMapRenderer(map);
+        minimapRenderer = new IsometricTiledMapRenderer(map);
 
         TiledMapTileLayer layer0 = (TiledMapTileLayer) map.getLayers().get(0);
 
@@ -166,13 +183,14 @@ public class MainScreen implements Screen {
             dispose();
         }
 
+
     }
 
     @Override
     public void render(float delta) {
 
         camera.update();
-
+        minimapCamera.update();
 
         gameHud.update(delta);
 
@@ -181,17 +199,16 @@ public class MainScreen implements Screen {
         shapeRenderer.setProjectionMatrix(camera.combined);
 
 
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 
 
         if (dragging != null) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(5, 0.5F, 0.5F, 1);
-            shapeRenderer.line(600, 100, 100, 100);
-            //shapeRenderer.line(dragging.x, dragging.y, dragging.getWidth(), dragging.getHeight());
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//            shapeRenderer.setColor(5, 0.5F, 0.5F, 1);
+//            shapeRenderer.line(dragging.x, dragging.y, dragging.getWidth(), dragging.getHeight());
+            shapeRenderer.rect(200, 200, 100, 100);
             shapeRenderer.end();
         }
 
@@ -226,7 +243,6 @@ public class MainScreen implements Screen {
                 float x = Math.abs(clickOnScreen.x - unit.getWidth() / 2 - unit.getCurrentX());
                 float y = Math.abs(clickOnScreen.y - unit.getCurrentY() - 40);
                 if (x < 20 && !(x < 0) && y < 20 && !(y < 0)) {
-
                     unit.select();
                 }
             }
@@ -253,6 +269,7 @@ public class MainScreen implements Screen {
         int[] foregroundLayers = { 1 };    // don't allocate every frame!
         handleInput();
 
+
         mapRenderer.render(backgroundLayers);
         mapRenderer.setView(camera);
 
@@ -267,6 +284,15 @@ public class MainScreen implements Screen {
         //render & draw hud
         batch.setProjectionMatrix(gameHud.stage.getCamera().combined);
         gameHud.stage.draw();
+
+        // minimap rendering
+        minimapSb.setProjectionMatrix(minimapCamera.combined);
+        minimapRenderer.setView(minimapCamera);
+        minimapRenderer.render();
+        minimapSb.begin();
+        sprite.draw(minimapSb);
+        sprite2.draw(minimapSb);
+        minimapSb.end();
 
     }
 
