@@ -40,6 +40,9 @@ public class CharacterMovement extends Sprite {
     public TiledMapTile current;
     public TiledMapTileSet pine;
     public TiledMapTileLayer.Cell cut;
+    public TiledMapTileLayer.Cell cut2;
+    public TiledMapTileLayer.Cell cut3;
+    public TiledMapTileLayer.Cell cut4;
     public TiledMapTileSet grass_water;
     public TiledMapTile grass;
 
@@ -71,76 +74,77 @@ public class CharacterMovement extends Sprite {
     }
 
     public String checkCollision(String direction) {
-        int x = currentX / TILE_WIDTH - currentY / TILE_HEIGHT + 1;
-        int y = currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 1;
-        if (direction.equals("ne")) {
-            //y += 2;
-            y++;
-        } else if (direction.equals("se")) {
-            //x++;
-            //x += 2;
-        } else if (direction.equals("e")) {
-            x++;
-            y++;
-        } else if (direction.equals("nw")) {
-            //x -= 2;
-            //x -= 3;
-            x--;
-        } else if (direction.equals("sw")) {
-            y--;
-        } else if (direction.equals("w")) {
-           x--;
-           y--;
-        } else if (direction.equals("n")) {
-            x--;
-            y++;
-        } else if (direction.equals("s")) {
-            x++;
-            y--;
-        }
-        if (type.equals("worker")) {
-            TiledMapTileLayer.Cell terrain = background.getCell(x, y);
-            if (terrain != null && terrain.getTile().
-                    getProperties().containsKey("trunk")) {
-
-
-                cut = foreground.getCell(x - 1, y - 3);
-
-                if (cut.getTile() != null && cut.getTile().getProperties().containsKey("suur")) {
-                    if (cutStart == -1) {
-                        cutStart = GameHud.getTime();
-                    }
-                }
-                if (cut.getTile() != null && cut.getTile().getProperties().containsKey("suur")) {
-                    if (cutStart - 3 > GameHud.getTime()) {
-                        current = cut.getTile();
-
-                        cut.setTile(null);
-                        cutStart = -1;
-                        terrain.setTile(map.getTileSets().getTileSet("isometric_grass_and_water").getTile(2));
-
-                        //Add wood
-                        GameHud.addWood(20);
-                    }
-                }
-                return "cut";
-            } else {
-                cutStart = -1;
+        int currPosX = currentX / TILE_WIDTH - currentY / TILE_HEIGHT + 1;
+        int currPosY = currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 1;
+        int x = (int) (destinationX / TILE_WIDTH - destinationY / TILE_HEIGHT + 1);
+        int y = (int) (destinationX / TILE_WIDTH + destinationY / TILE_HEIGHT + 1);
+        //if (currPosX == x && currPosY == y) {
+            if (direction.equals("ne")) {
+                //y += 2;
+                y++;
+            } else if (direction.equals("se")) {
+                //x++;
+                //x += 2;
+            } else if (direction.equals("e")) {
+                x++;
+                y++;
+            } else if (direction.equals("nw")) {
+                //x -= 2;
+                //x -= 3;
+                x--;
+            } else if (direction.equals("sw")) {
+                y--;
+            } else if (direction.equals("w")) {
+                x--;
+                y--;
+            } else if (direction.equals("n")) {
+                x--;
+                y++;
+            } else if (direction.equals("s")) {
+                x++;
+                y--;
             }
-        }
-        //respawn tree
-        //if (cut != null) {
-        //    if (cut.getTile() == null && cutEnd - 5 > GameHud.getTime()) {
-        //        cut.setTile(current);
-        //    }
-        //}
+            if (type.equals("worker")) {
+                for (int i = x - 1; i < x + 1; i++) {
+                    for (int j = y - 1; j < y + 3; j++) {
+                        cut = foreground.getCell(i - 1, j - 3);
+                        if (cut != null && cut.getTile() != null && cut.getTile().getProperties().containsKey("suur")) {
+                            if (cutStart == -1) {
+                                cutStart = GameHud.getTime();
+                            }
+                            if (cutStart - 3 > GameHud.getTime()) {
+                                current = cut.getTile();
 
-        TiledMapTileLayer.Cell groundCell = background.getCell(x, y);
-        if (groundCell != null && groundCell.getTile().
-                getProperties().containsKey("Water")) {
-            return "water";
-        }
+                                cut.setTile(null);
+                                cutStart = -1;
+
+                                //Add wood
+                                GameHud.addWood(20);
+                            }
+
+                            return "cut";
+                        }
+                    }
+                }
+
+                    cutStart = -1;
+                }
+
+            //respawn tree
+            //if (cut != null) {
+            //    if (cut.getTile() == null && cutEnd - 5 > GameHud.getTime()) {
+            //        cut.setTile(current);
+            //    }
+            //}
+
+            TiledMapTileLayer.Cell groundCell = background.getCell(x, y);
+            if (groundCell != null && groundCell.getTile().
+                    getProperties().containsKey("Water")) {
+                return "water";
+            }
+
         return "move on.";
+
     }
 
 
@@ -261,7 +265,16 @@ public class CharacterMovement extends Sprite {
         }
         currentAtlasKey = String.format("felling tree %s%04d", direction, currentFrame);
         this.setRegion(cuttingAtlas.findRegion(currentAtlasKey));
+    }
 
+    public void carryTrunk(String direction) {
+        this.setPosition(currentX, currentY);
+        currentFrame++;
+        if (currentFrame > 7) {
+            currentFrame = 0;
+        }
+        currentAtlasKey = String.format("walking with trunk %s%04d", direction, currentFrame);
+        this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
     }
 
     public void select() {

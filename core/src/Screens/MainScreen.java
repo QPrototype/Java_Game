@@ -190,7 +190,8 @@ public class MainScreen implements Screen {
         if (dragging != null) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(5, 0.5F, 0.5F, 1);
-            shapeRenderer.line(dragging.x, dragging.y, dragging.getWidth(), dragging.getHeight());
+            shapeRenderer.line(600, 100, 100, 100);
+            //shapeRenderer.line(dragging.x, dragging.y, dragging.getWidth(), dragging.getHeight());
             shapeRenderer.end();
         }
 
