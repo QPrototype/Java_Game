@@ -166,6 +166,7 @@ public class MainScreen implements Screen {
             dispose();
         }
 
+
     }
 
     @Override
@@ -188,9 +189,10 @@ public class MainScreen implements Screen {
 
 
         if (dragging != null) {
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(5, 0.5F, 0.5F, 1);
-            shapeRenderer.line(dragging.x, dragging.y, dragging.getWidth(), dragging.getHeight());
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//            shapeRenderer.setColor(5, 0.5F, 0.5F, 1);
+//            shapeRenderer.line(dragging.x, dragging.y, dragging.getWidth(), dragging.getHeight());
+            shapeRenderer.rect(200, 200, 100, 100);
             shapeRenderer.end();
         }
 

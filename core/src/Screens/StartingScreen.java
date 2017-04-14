@@ -22,7 +22,7 @@ public class StartingScreen implements Screen {
    public StartingScreen(final Game game, final Screen screen) {
         super();
         batch = new SpriteBatch();
-        skin = new Skin(Gdx.files.internal("core/assets/screens/startingscreen/uiskin.json"));
+        skin = new Skin(Gdx.files.internal("core/assets/screens/startingscreen/glassy-ui.json"));
         stage = new Stage();
 
         final TextButton button = new TextButton("Start Game", skin, "default");
