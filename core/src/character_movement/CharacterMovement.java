@@ -38,6 +38,9 @@ public class CharacterMovement extends Sprite {
 
     public static int cutStart = -1;
     public static int mineStart = -1;
+    private boolean carryingLogs = false;
+    private boolean carryingOres = false;
+
     public TiledMapTile current;
     public TiledMapTileSet pine;
     public TiledMapTileLayer.Cell cut;
@@ -73,10 +76,12 @@ public class CharacterMovement extends Sprite {
     }
 
     public String checkCollision(String direction) {
+        // 19 9 house
         int currPosX = currentX / TILE_WIDTH - currentY / TILE_HEIGHT + 1;
         int currPosY = currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 1;
         int x = (int) (destinationX / TILE_WIDTH - destinationY / TILE_HEIGHT + 1);
         int y = (int) (destinationX / TILE_WIDTH + destinationY / TILE_HEIGHT + 1);
+        System.out.println("x: " + x + "   y: " + y);
         //if (currPosX == x && currPosY == y) {
             if (direction.equals("ne")) {
                 //y += 2;
@@ -120,6 +125,7 @@ public class CharacterMovement extends Sprite {
 
                                 cut.setTile(null);
                                 cutStart = -1;
+                                carryingLogs = true;
 
                                 GameHud.addWood(20);
                             }
