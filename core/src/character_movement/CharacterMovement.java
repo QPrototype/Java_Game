@@ -17,6 +17,7 @@ public class CharacterMovement extends Sprite {
     private TextureAtlas lookingAtlas;
     private TextureAtlas cuttingAtlas;
     private TextureAtlas miningAtlas;
+    private TextureAtlas carryingTrunkatlas;
 
     private static final int TILE_WIDTH = 64;
     private static final int TILE_HEIGHT = 32;
@@ -40,6 +41,8 @@ public class CharacterMovement extends Sprite {
     public static int mineStart = -1;
     private boolean carryingLogs = false;
     private boolean carryingOres = false;
+    private int beforeCarryingX;
+    private int beforeCarryingY;
 
     public TiledMapTile current;
     public TiledMapTileSet pine;
@@ -51,7 +54,8 @@ public class CharacterMovement extends Sprite {
 
 
     public CharacterMovement(String type, TextureAtlas walkingAtlas, TextureAtlas lookingAtlas,
-                             TextureAtlas cuttingAtlas, TextureAtlas miningAtlas,  TextureAtlas.AtlasRegion region,
+                             TextureAtlas cuttingAtlas, TextureAtlas carryingTrunkatlas,
+                             TextureAtlas miningAtlas,  TextureAtlas.AtlasRegion region,
                              TiledMap map) {
         super(new Sprite(region));
 
@@ -59,6 +63,7 @@ public class CharacterMovement extends Sprite {
         this.lookingAtlas = lookingAtlas;
         this.cuttingAtlas = cuttingAtlas;
         this.miningAtlas = miningAtlas;
+        this.carryingTrunkatlas = carryingTrunkatlas;
         this.map = map;
         //this.setPosition(currentX, currentY);
         this.background = (TiledMapTileLayer) map.getLayers().get(0);
@@ -81,7 +86,6 @@ public class CharacterMovement extends Sprite {
         int currPosY = currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 1;
         int x = (int) (destinationX / TILE_WIDTH - destinationY / TILE_HEIGHT + 1);
         int y = (int) (destinationX / TILE_WIDTH + destinationY / TILE_HEIGHT + 1);
-        System.out.println("x: " + x + "   y: " + y);
         //if (currPosX == x && currPosY == y) {
             if (direction.equals("ne")) {
                 //y += 2;
@@ -125,7 +129,14 @@ public class CharacterMovement extends Sprite {
 
                                 cut.setTile(null);
                                 cutStart = -1;
+                                // For automatic carrying of logs
                                 carryingLogs = true;
+                                // Where to carry logs --> Main building location
+                                beforeCarryingX = currentX;
+                                beforeCarryingY = currentY;
+                                destinationX = 870;
+                                destinationY = -185;
+
 
                                 GameHud.addWood(20);
                             }
@@ -191,7 +202,11 @@ public class CharacterMovement extends Sprite {
                     }
                     currentX += 3;
                     currentY += 3;
-                    changeFrame("ne");
+                    if (carryingLogs) {
+                        carryTrunk("ne");
+                    } else {
+                        changeFrame("ne");
+                    }
                 } else if (currentY - destinationY > 5) {
                     if (checkCollision("se").equals("water")) {
                         return;
@@ -202,10 +217,13 @@ public class CharacterMovement extends Sprite {
                         mine("se");
                         return;
                     }
-
                     currentX += 4;
                     currentY -= 4;
-                    changeFrame("se");
+                    if (carryingLogs) {
+                        carryTrunk("se");
+                    } else {
+                        changeFrame("se");
+                    }
                 } else {
                     if (checkCollision("e").equals("water")) {
                         return;
@@ -217,8 +235,12 @@ public class CharacterMovement extends Sprite {
                         return;
                     }
                     currentX += 3;
-                    this.setPosition(currentX, currentY);
-                    changeFrame("e");
+                    //this.setPosition(currentX, currentY);
+                    if (carryingLogs) {
+                        carryTrunk("e");
+                    } else {
+                        changeFrame("e");
+                    }
                 }
             } else if (currentX - destinationX > 5) {
                 if (destinationY - currentY > 5) {
@@ -233,7 +255,11 @@ public class CharacterMovement extends Sprite {
                     }
                     currentX -= 4;
                     currentY += 4;
-                    changeFrame("nw");
+                    if (carryingLogs) {
+                        carryTrunk("nw");
+                    } else {
+                        changeFrame("nw");
+                    }
                 } else if (currentY - destinationY > 5) {
                     if (checkCollision("sw").equals("water")) {
                         return;
@@ -246,7 +272,11 @@ public class CharacterMovement extends Sprite {
                     }
                     currentX -= 3;
                     currentY -= 3;
-                    changeFrame("sw");
+                    if (carryingLogs) {
+                        carryTrunk("sw");
+                    } else {
+                        changeFrame("sw");
+                    }
                 } else {
                     if (checkCollision("w").equals("water")) {
                         return;
@@ -258,7 +288,11 @@ public class CharacterMovement extends Sprite {
                         return;
                     }
                     currentX -= 4;
-                    changeFrame("w");
+                    if (carryingLogs) {
+                        carryTrunk("w");
+                    } else {
+                        changeFrame("w");
+                    }
                 }
             } else if (Math.abs(destinationX - currentX) <= 5) {
                 if (destinationY - currentY > 1) {
@@ -272,7 +306,11 @@ public class CharacterMovement extends Sprite {
                         return;
                     }
                     currentY += 4;
-                    changeFrame("n");
+                    if (carryingLogs) {
+                        carryTrunk("n");
+                    } else {
+                        changeFrame("n");
+                    }
                 } else if (currentY - destinationY > 5) {
                     if (checkCollision("s").equals("water")) {
                         return;
@@ -284,7 +322,11 @@ public class CharacterMovement extends Sprite {
                         return;
                     }
                     currentY -= 4;
-                    changeFrame("s");
+                    if (carryingLogs) {
+                        carryTrunk("s");
+                    } else {
+                        changeFrame("s");
+                    }
                 } else {
                     currentAtlasKey = currentAtlasKey.replaceAll("walking", "looking");
 
@@ -325,13 +367,13 @@ public class CharacterMovement extends Sprite {
     }
 
     public void carryTrunk(String direction) {
-        this.setPosition(currentX, currentY);
+            this.setPosition(currentX, currentY);
         currentFrame++;
         if (currentFrame > 7) {
             currentFrame = 0;
         }
         currentAtlasKey = String.format("walking with trunk %s%04d", direction, currentFrame);
-        this.setRegion(walkingAtlas.findRegion(currentAtlasKey));
+        this.setRegion(carryingTrunkatlas.findRegion(currentAtlasKey));
     }
 
     public void select() {
@@ -352,6 +394,7 @@ public class CharacterMovement extends Sprite {
     }
 
     public void setDestination(float x, float y) {
+        System.out.println("x: " + x + "   y: " + y);
         destinationX = x;
         destinationY = y;
     }
@@ -360,6 +403,14 @@ public class CharacterMovement extends Sprite {
         this.setPosition((float) x, (float) y);
         currentX = x;
         currentY = y;
+    }
+
+    public boolean isCarryingLogs() {
+        return carryingLogs;
+    }
+
+    public boolean isCarryingOres() {
+        return carryingOres;
     }
 }
 

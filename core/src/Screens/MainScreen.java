@@ -51,6 +51,7 @@ public class MainScreen implements Screen {
     private TextureAtlas lookingAtlas;
     private TextureAtlas cuttingAtlas;
     private TextureAtlas miningAtlas;
+    private TextureAtlas carryingTrunkatlas;
     private CharacterMovement sprite;
     private CharacterMovement sprite2;
     public List<CharacterMovement> allUnits = new ArrayList<CharacterMovement>();
@@ -86,6 +87,7 @@ public class MainScreen implements Screen {
         lookingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/looking.atlas"));
         cuttingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/Lumberjack/cutting.atlas"));
         miningAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/Miner/mining.atlas"));
+        carryingTrunkatlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/Lumberjack/walking_trunk.atlas"));
 
 
         gameHud = new GameHud(hudBatch);
@@ -115,8 +117,8 @@ public class MainScreen implements Screen {
         camera.position.set(center);
 
         TextureAtlas.AtlasRegion region = walkingAtlas.findRegion("walking e0000");
-        sprite = new CharacterMovement("worker", walkingAtlas, lookingAtlas, cuttingAtlas, miningAtlas, region, map);
-        sprite2 = new CharacterMovement("fighter", walkingAtlas, lookingAtlas, cuttingAtlas, miningAtlas, region, map);
+        sprite = new CharacterMovement("worker", walkingAtlas, lookingAtlas, cuttingAtlas, carryingTrunkatlas, miningAtlas, region, map);
+        sprite2 = new CharacterMovement("fighter", walkingAtlas, lookingAtlas, cuttingAtlas, carryingTrunkatlas, miningAtlas, region, map);
         allUnits.add(sprite);
         allUnits.add(sprite2);
         sprite.setLocation(600, 5);
@@ -255,18 +257,16 @@ public class MainScreen implements Screen {
             }
 
 
-
             // For detecting hud
             Vector3 projected = new Vector3();
             projected.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             if (projected.y < 943) {
                 for (CharacterMovement unit : allUnits) {
-                    if (unit.isSelected()) {
+                    if (unit.isSelected() && !unit.isCarryingLogs()) {
                         unit.setDestination(clickOnScreen.x - unit.getWidth() / 2, clickOnScreen.y - 10);
                     }
                 }
             }
-
         } else if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
             for (CharacterMovement unit : allUnits) {
                 unit.unSelect();
