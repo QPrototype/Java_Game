@@ -336,7 +336,7 @@ public class CharacterMovement extends Sprite {
         selected = false;
     }
 
-    public boolean getSelected() {
+    public boolean isSelected() {
         return selected;
     }
 
