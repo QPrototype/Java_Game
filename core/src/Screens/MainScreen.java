@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.MainGame.MainGame;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class MainScreen implements Screen {
     //map variables.
     private TiledMap map;
     private IsometricTiledMapRenderer mapRenderer;
+    public static List<Point2D> allTrees = new ArrayList<Point2D>();
 
 
     //Sprites
@@ -110,6 +112,16 @@ public class MainScreen implements Screen {
         minimapRenderer = new IsometricTiledMapRenderer(map);
 
         TiledMapTileLayer layer0 = (TiledMapTileLayer) map.getLayers().get(0);
+        TiledMapTileLayer layer1 = (TiledMapTileLayer) map.getLayers().get(1);
+        for (int x = 0; x < 50; x++) {
+            for (int y = 0; y < 50; y++) {
+                Point2D.Double coordinates = new Point2D.Double(x, y);
+                if (layer1.getCell(x, y) != null && layer1.getCell(x, y).getTile().getProperties().containsKey("suur")) {
+                    allTrees.add(coordinates);
+                }
+            }
+        }
+
 
         Vector3 center = new Vector3(layer0.getWidth() * layer0.getTileWidth() / 5,
                 layer0.getHeight() * layer0.getTileHeight() / 7, 0);
@@ -153,6 +165,10 @@ public class MainScreen implements Screen {
     //Add unit to the list containing all units
     public void addCharacter(CharacterMovement character) {
         allUnits.add(character);
+    }
+
+    public static void removeTree(Point2D.Double coordinates) {
+        allTrees.remove(coordinates);
     }
 
 
@@ -241,7 +257,6 @@ public class MainScreen implements Screen {
             //projection to world coords
             Vector3 clickOnScreen = new Vector3();
             clickOnScreen.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-
 
             camera.unproject(clickOnScreen);
 

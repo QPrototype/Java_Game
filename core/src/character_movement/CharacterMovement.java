@@ -9,6 +9,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import Scenes.GameHud;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 
+import java.awt.*;
+import java.awt.geom.Point2D;
 
 
 public class CharacterMovement extends Sprite {
@@ -17,10 +19,11 @@ public class CharacterMovement extends Sprite {
     private TextureAtlas lookingAtlas;
     private TextureAtlas cuttingAtlas;
     private TextureAtlas miningAtlas;
-    private TextureAtlas carryingTrunkatlas;
+    private TextureAtlas carryingTrunkAtlas;
 
     private static final int TILE_WIDTH = 64;
     private static final int TILE_HEIGHT = 32;
+
 
 
     private int currentFrame = 1;
@@ -41,8 +44,10 @@ public class CharacterMovement extends Sprite {
     public static int mineStart = -1;
     private boolean carryingLogs = false;
     private boolean carryingOres = false;
-    private int beforeCarryingX;
-    private int beforeCarryingY;
+    private int lastTreeX;
+    private int lastTreeY;
+    private int lastCollX;
+    private int lastCollY;
 
     public TiledMapTile current;
     public TiledMapTileSet pine;
@@ -50,7 +55,6 @@ public class CharacterMovement extends Sprite {
     public TiledMapTileLayer.Cell mine;
 
     private boolean selected = false;
-
 
 
     public CharacterMovement(String type, TextureAtlas walkingAtlas, TextureAtlas lookingAtlas,
@@ -63,7 +67,7 @@ public class CharacterMovement extends Sprite {
         this.lookingAtlas = lookingAtlas;
         this.cuttingAtlas = cuttingAtlas;
         this.miningAtlas = miningAtlas;
-        this.carryingTrunkatlas = carryingTrunkatlas;
+        this.carryingTrunkAtlas = carryingTrunkatlas;
         this.map = map;
         //this.setPosition(currentX, currentY);
         this.background = (TiledMapTileLayer) map.getLayers().get(0);
@@ -128,12 +132,13 @@ public class CharacterMovement extends Sprite {
                                 //current = cut.getTile();
 
                                 cut.setTile(null);
+                                MainScreen.removeTree(new Point2D.Double(i - 1, j - 3));
                                 cutStart = -1;
                                 // For automatic carrying of logs
                                 carryingLogs = true;
                                 // Where to carry logs --> Main building location
-                                beforeCarryingX = currentX;
-                                beforeCarryingY = currentY;
+                                lastTreeX = x;
+                                lastTreeY = y;
                                 destinationX = 870;
                                 destinationY = -185;
 
@@ -373,11 +378,36 @@ public class CharacterMovement extends Sprite {
             currentFrame = 0;
         }
         currentAtlasKey = String.format("walking with trunk %s%04d", direction, currentFrame);
-        this.setRegion(carryingTrunkatlas.findRegion(currentAtlasKey));
-        if (Math.abs(currentX - destinationX) < 5 && Math.abs(currentY - destinationY) < 5) {
+        this.setRegion(carryingTrunkAtlas.findRegion(currentAtlasKey));
+        if (Math.abs(currentX - destinationX) < 10 && Math.abs(currentY - destinationY) < 10) {
             carryingLogs = false;
-            destinationX = beforeCarryingX;
-            destinationY = beforeCarryingY;
+            int difference = 5000;
+            int nextX = -1;
+            int nextY = -1;
+            for (Point2D coordinates : MainScreen.allTrees) {
+                int tempDiff = 0;
+                tempDiff += Math.abs(coordinates.getX() - lastTreeX);
+                tempDiff += Math.abs(coordinates.getY() - lastTreeY);
+                if (tempDiff < difference) {
+                    difference = tempDiff;
+                    nextX = (int) coordinates.getX();
+                    nextY = (int) coordinates.getY();
+                }
+            }
+            //System.out.println(nextX);
+            //System.out.println(nextY);
+            if (nextX != -1 && nextY != -1) {
+                destinationX = (nextX + nextY) * TILE_HEIGHT + 110;
+                destinationY = (nextY - nextX) / 2 * TILE_HEIGHT + 20;
+                //System.out.println(destinationX);
+                //System.out.println(destinationY);
+            } else {
+                //int currPosX = currentX / TILE_WIDTH - currentY / TILE_HEIGHT + 1;
+                //int currPosY = currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 1;
+                destinationX = lastTreeX;
+                destinationY = lastTreeY;
+
+            }
         }
     }
 
@@ -399,7 +429,6 @@ public class CharacterMovement extends Sprite {
     }
 
     public void setDestination(float x, float y) {
-        System.out.println("x: " + x + "   y: " + y);
         destinationX = x;
         destinationY = y;
     }
