@@ -4,13 +4,11 @@ import Screens.MainScreen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import Scenes.GameHud;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 
 public class CharacterMovement extends Sprite {
@@ -20,6 +18,7 @@ public class CharacterMovement extends Sprite {
     private TextureAtlas cuttingAtlas;
     private TextureAtlas miningAtlas;
     private TextureAtlas carryingTrunkAtlas;
+    private TextureAtlas carryingIronOreAtlas;
 
     private static final int TILE_WIDTH = 64;
     private static final int TILE_HEIGHT = 32;
@@ -43,37 +42,33 @@ public class CharacterMovement extends Sprite {
     public static int cutStart = -1;
     public static int mineStart = -1;
     private boolean carryingLogs = false;
-    private boolean carryingOres = false;
+    private boolean carryingIronOres = false;
     private int lastTreeX;
     private int lastTreeY;
-    private int lastCollX;
-    private int lastCollY;
+    private int lastOreX;
+    private int lastOreY;
 
-    public TiledMapTile current;
-    public TiledMapTileSet pine;
+
     public TiledMapTileLayer.Cell cut;
     public TiledMapTileLayer.Cell mine;
 
     private boolean selected = false;
 
 
-    public CharacterMovement(String type, TextureAtlas walkingAtlas, TextureAtlas lookingAtlas,
-                             TextureAtlas cuttingAtlas, TextureAtlas carryingTrunkatlas,
-                             TextureAtlas miningAtlas,  TextureAtlas.AtlasRegion region,
+    public CharacterMovement(String type, ArrayList<TextureAtlas> atlases, TextureAtlas.AtlasRegion region,
                              TiledMap map) {
         super(new Sprite(region));
 
-        this.walkingAtlas = walkingAtlas;
-        this.lookingAtlas = lookingAtlas;
-        this.cuttingAtlas = cuttingAtlas;
-        this.miningAtlas = miningAtlas;
-        this.carryingTrunkAtlas = carryingTrunkatlas;
+        this.walkingAtlas = atlases.get(0);
+        this.lookingAtlas = atlases.get(1);
+        this.cuttingAtlas = atlases.get(2);
+        this.miningAtlas = atlases.get(3);
+        this.carryingTrunkAtlas = atlases.get(4);
+        this.carryingIronOreAtlas = atlases.get(5);
         this.map = map;
-        //this.setPosition(currentX, currentY);
         this.background = (TiledMapTileLayer) map.getLayers().get(0);
         this.foreground = (TiledMapTileLayer) map.getLayers().get(1);
         this.type = type;
-        //MainScreen.addCharacter(this);
     }
 
     public int getCurrentX() {
@@ -143,7 +138,6 @@ public class CharacterMovement extends Sprite {
                                 destinationY = -185;
 
 
-                                GameHud.addWood(20);
                             }
 
                             return "cut";
@@ -157,6 +151,14 @@ public class CharacterMovement extends Sprite {
 
                                 mine.setTile(null);
                                 mineStart = -1;
+
+                                // For automatic carrying of logs
+                                carryingIronOres = true;
+                                // Where to carry logs --> Main building location
+                                lastOreX = x;
+                                lastOreY = y;
+                                destinationX = 870;
+                                destinationY = -185;
 
                                 //GameHud.addIron(20);
                             }
@@ -209,6 +211,8 @@ public class CharacterMovement extends Sprite {
                     currentY += 3;
                     if (carryingLogs) {
                         carryTrunk("ne");
+                    } else if (carryingIronOres) {
+                        carryIron("ne");
                     } else {
                         changeFrame("ne");
                     }
@@ -226,6 +230,8 @@ public class CharacterMovement extends Sprite {
                     currentY -= 4;
                     if (carryingLogs) {
                         carryTrunk("se");
+                    } else if (carryingIronOres) {
+                        carryIron("se");
                     } else {
                         changeFrame("se");
                     }
@@ -243,6 +249,8 @@ public class CharacterMovement extends Sprite {
                     //this.setPosition(currentX, currentY);
                     if (carryingLogs) {
                         carryTrunk("e");
+                    } else if (carryingIronOres) {
+                        carryIron("e");
                     } else {
                         changeFrame("e");
                     }
@@ -262,6 +270,8 @@ public class CharacterMovement extends Sprite {
                     currentY += 4;
                     if (carryingLogs) {
                         carryTrunk("nw");
+                    } else if (carryingIronOres) {
+                        carryIron("nw");
                     } else {
                         changeFrame("nw");
                     }
@@ -279,6 +289,8 @@ public class CharacterMovement extends Sprite {
                     currentY -= 3;
                     if (carryingLogs) {
                         carryTrunk("sw");
+                    } else if (carryingIronOres) {
+                        carryIron("sw");
                     } else {
                         changeFrame("sw");
                     }
@@ -295,6 +307,8 @@ public class CharacterMovement extends Sprite {
                     currentX -= 4;
                     if (carryingLogs) {
                         carryTrunk("w");
+                    } else if (carryingIronOres) {
+                        carryIron("w");
                     } else {
                         changeFrame("w");
                     }
@@ -313,6 +327,8 @@ public class CharacterMovement extends Sprite {
                     currentY += 4;
                     if (carryingLogs) {
                         carryTrunk("n");
+                    } else if (carryingIronOres) {
+                        carryIron("n");
                     } else {
                         changeFrame("n");
                     }
@@ -329,6 +345,8 @@ public class CharacterMovement extends Sprite {
                     currentY -= 4;
                     if (carryingLogs) {
                         carryTrunk("s");
+                    } else if (carryingIronOres) {
+                        carryIron("s");
                     } else {
                         changeFrame("s");
                     }
@@ -380,6 +398,8 @@ public class CharacterMovement extends Sprite {
         currentAtlasKey = String.format("walking with trunk %s%04d", direction, currentFrame);
         this.setRegion(carryingTrunkAtlas.findRegion(currentAtlasKey));
         if (Math.abs(currentX - destinationX) < 10 && Math.abs(currentY - destinationY) < 10) {
+            GameHud.addWood(20);
+
             carryingLogs = false;
             int difference = 5000;
             int nextX = -1;
@@ -406,6 +426,43 @@ public class CharacterMovement extends Sprite {
                 //int currPosY = currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 1;
                 destinationX = lastTreeX;
                 destinationY = lastTreeY;
+
+            }
+        }
+    }
+
+    public void carryIron(String direction) {
+        this.setPosition(currentX, currentY);
+        currentFrame++;
+        if (currentFrame > 7) {
+            currentFrame = 0;
+        }
+        currentAtlasKey = String.format("walking %s%04d", direction, currentFrame);
+        this.setRegion(carryingIronOreAtlas.findRegion(currentAtlasKey));
+        if (Math.abs(currentX - destinationX) < 10 && Math.abs(currentY - destinationY) < 10) {
+            GameHud.addIron(20);
+
+            carryingIronOres = false;
+            int difference = 5000;
+            int nextX = -1;
+            int nextY = -1;
+            for (Point2D coordinates : MainScreen.allIronOres) {
+                int tempDiff = 0;
+                tempDiff += Math.abs(coordinates.getX() - lastOreX);
+                tempDiff += Math.abs(coordinates.getY() - lastOreY);
+                if (tempDiff < difference) {
+                    difference = tempDiff;
+                    nextX = (int) coordinates.getX();
+                    nextY = (int) coordinates.getY();
+                }
+            }
+            if (nextX != -1 && nextY != -1) {
+                destinationX = (nextX + nextY) * TILE_HEIGHT + 110;
+                destinationY = (nextY - nextX) / 2 * TILE_HEIGHT + 20;
+            } else {
+
+                destinationX = lastOreX;
+                destinationY = lastOreY;
 
             }
         }
@@ -443,8 +500,8 @@ public class CharacterMovement extends Sprite {
         return carryingLogs;
     }
 
-    public boolean isCarryingOres() {
-        return carryingOres;
+    public boolean isCarryingIronOres() {
+        return carryingIronOres;
     }
 }
 

@@ -24,6 +24,8 @@ import com.mygdx.MainGame.MainGame;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class MainScreen implements Screen {
@@ -44,6 +46,8 @@ public class MainScreen implements Screen {
     private TiledMap map;
     private IsometricTiledMapRenderer mapRenderer;
     public static List<Point2D> allTrees = new ArrayList<Point2D>();
+    public static List<Point2D> allIronOres = new ArrayList<Point2D>();
+
 
 
     //Sprites
@@ -53,7 +57,9 @@ public class MainScreen implements Screen {
     private TextureAtlas lookingAtlas;
     private TextureAtlas cuttingAtlas;
     private TextureAtlas miningAtlas;
-    private TextureAtlas carryingTrunkatlas;
+    private TextureAtlas carryingTrunkAtlas;
+    private TextureAtlas carryingIron;
+    public ArrayList<TextureAtlas> atlases = new ArrayList<TextureAtlas>();
     private CharacterMovement sprite;
     private CharacterMovement sprite2;
     public List<CharacterMovement> allUnits = new ArrayList<CharacterMovement>();
@@ -89,8 +95,14 @@ public class MainScreen implements Screen {
         lookingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/looking.atlas"));
         cuttingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/Lumberjack/cutting.atlas"));
         miningAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/Miner/mining.atlas"));
-        carryingTrunkatlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/Lumberjack/walking_trunk.atlas"));
-
+        carryingTrunkAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/Lumberjack/walking_trunk.atlas"));
+        carryingIron = new TextureAtlas(Gdx.files.internal("core/assets/characters/Miner/carrying.atlas"));
+        atlases.add(walkingAtlas);
+        atlases.add(lookingAtlas);
+        atlases.add(cuttingAtlas);
+        atlases.add(miningAtlas);
+        atlases.add(carryingTrunkAtlas);
+        atlases.add(carryingIron);
 
         gameHud = new GameHud(hudBatch);
 
@@ -113,14 +125,11 @@ public class MainScreen implements Screen {
 
         TiledMapTileLayer layer0 = (TiledMapTileLayer) map.getLayers().get(0);
         TiledMapTileLayer layer1 = (TiledMapTileLayer) map.getLayers().get(1);
-        for (int x = 0; x < 50; x++) {
-            for (int y = 0; y < 50; y++) {
-                Point2D.Double coordinates = new Point2D.Double(x, y);
-                if (layer1.getCell(x, y) != null && layer1.getCell(x, y).getTile().getProperties().containsKey("suur")) {
-                    allTrees.add(coordinates);
-                }
-            }
-        }
+
+        // Add all trees to list
+        iterateTiles(layer1, "suur");
+        // Add all iron ores to list
+        iterateTiles(layer1, "iron");
 
 
         Vector3 center = new Vector3(layer0.getWidth() * layer0.getTileWidth() / 5,
@@ -129,8 +138,8 @@ public class MainScreen implements Screen {
         camera.position.set(center);
 
         TextureAtlas.AtlasRegion region = walkingAtlas.findRegion("walking e0000");
-        sprite = new CharacterMovement("worker", walkingAtlas, lookingAtlas, cuttingAtlas, carryingTrunkatlas, miningAtlas, region, map);
-        sprite2 = new CharacterMovement("fighter", walkingAtlas, lookingAtlas, cuttingAtlas, carryingTrunkatlas, miningAtlas, region, map);
+        sprite = new CharacterMovement("worker", atlases, region, map);
+        sprite2 = new CharacterMovement("figter", atlases, region, map);
         allUnits.add(sprite);
         allUnits.add(sprite2);
         sprite.setLocation(600, 5);
@@ -154,6 +163,21 @@ public class MainScreen implements Screen {
                 , 0, 1 / 30.0f);
     }
 
+    public void iterateTiles(TiledMapTileLayer layer, String key) {
+        for (int x = 0; x < 50; x++) {
+            for (int y = 0; y < 50; y++) {
+                Point2D.Double coordinates = new Point2D.Double(x, y);
+                if (layer.getCell(x, y) != null) {
+                    if (layer.getCell(x, y).getTile().getProperties().containsKey("suur")) {
+                        allTrees.add(coordinates);
+                    } else if (layer.getCell(x, y).getTile().getProperties().containsKey("iron")) {
+                        allIronOres.add(coordinates);
+                    }
+                }
+            }
+        }
+    }
+
     public TextureAtlas getAtlas() {
         return atlas;
     }
@@ -169,6 +193,10 @@ public class MainScreen implements Screen {
 
     public static void removeTree(Point2D.Double coordinates) {
         allTrees.remove(coordinates);
+    }
+
+    public static void removeIronOre(Point2D.Double coordinates) {
+        allIronOres.remove(coordinates);
     }
 
 
@@ -277,7 +305,7 @@ public class MainScreen implements Screen {
             projected.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             if (projected.y < 943) {
                 for (CharacterMovement unit : allUnits) {
-                    if (unit.isSelected() && !unit.isCarryingLogs()) {
+                    if (unit.isSelected() && !unit.isCarryingLogs() && !unit.isCarryingIronOres()) {
                         unit.setDestination(clickOnScreen.x - unit.getWidth() / 2, clickOnScreen.y - 10);
                     }
                 }
