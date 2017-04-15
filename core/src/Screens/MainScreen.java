@@ -6,10 +6,8 @@ import character_movement.MyInputProcessor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -19,9 +17,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.MainGame.MainGame;
@@ -64,6 +60,7 @@ public class MainScreen implements Screen {
     private Vector3 dragStart;
     private Vector3 dragEnd;
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private ShapeRenderer circle = new ShapeRenderer();
 
     //movement
     private float destinationX = -1;
@@ -125,6 +122,7 @@ public class MainScreen implements Screen {
         sprite.setLocation(600, 5);
         sprite2.setLocation(700, 10);
 
+        ShapeRenderer circle = new ShapeRenderer();
 
 
 
@@ -191,21 +189,26 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        int[] backgroundLayers = { 0 }; // don't allocate every frame!
+        int[] foregroundLayers = { 1 };    // don't allocate every frame!
+        handleInput();
+
 
         camera.update();
         minimapCamera.update();
-
         gameHud.update(delta);
+
 
 
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glLineWidth(2);
 
-
+        mapRenderer.render(backgroundLayers);
+        mapRenderer.setView(camera);
 
         if (dragging != null) {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -214,7 +217,6 @@ public class MainScreen implements Screen {
             shapeRenderer.rect(200, 200, 100, 100);
             shapeRenderer.end();
         }
-
 
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
@@ -247,8 +249,11 @@ public class MainScreen implements Screen {
                 float y = Math.abs(clickOnScreen.y - unit.getCurrentY() - 40);
                 if (x < 20 && !(x < 0) && y < 20 && !(y < 0)) {
                     unit.select();
+
                 }
+
             }
+
 
 
             // For detecting hud
@@ -256,7 +261,7 @@ public class MainScreen implements Screen {
             projected.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             if (projected.y < 943) {
                 for (CharacterMovement unit : allUnits) {
-                    if (unit.getSelected()) {
+                    if (unit.isSelected()) {
                         unit.setDestination(clickOnScreen.x - unit.getWidth() / 2, clickOnScreen.y - 10);
                     }
                 }
@@ -268,13 +273,17 @@ public class MainScreen implements Screen {
             }
         }
 
-        int[] backgroundLayers = { 0 }; // don't allocate every frame!
-        int[] foregroundLayers = { 1 };    // don't allocate every frame!
-        handleInput();
+        for (CharacterMovement unit : allUnits){
+            if (unit.isSelected()){
+                circle.begin(ShapeRenderer.ShapeType.Line);
+                circle.setProjectionMatrix(camera.combined);
+                circle.setColor(255, 0, 0, 1);
+                circle.circle(unit.getCurrentX() + 50, unit.getCurrentY() + 30, 25);
+                circle.end();
+            }
+        }
 
 
-        mapRenderer.render(backgroundLayers);
-        mapRenderer.setView(camera);
 
         batch.begin();
         sprite.draw(batch);
@@ -296,6 +305,7 @@ public class MainScreen implements Screen {
         sprite.draw(minimapSb);
         sprite2.draw(minimapSb);
         minimapSb.end();
+
 
     }
 

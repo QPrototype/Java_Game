@@ -63,11 +63,11 @@ public class StartingScreen implements Screen {
 
         // Starting screen background.
         tableBG = new Table();
+        tableBG.setFillParent(true);
         mainBG = new Skin();
         mainBG.add("startingBackground", new Texture("core/assets/screens/startingscreen/startingBackground.jpg"));
         bgDrawable = mainBG.getDrawable("startingBackground");
         tableBG.setBackground(bgDrawable);
-        tableBG.setSize(MainScreen.WORLD_WIDTH - 320, MainScreen.WORLD_HEIGHT);
 
         // Content layout on starting screen
         tableContent = new Table();
