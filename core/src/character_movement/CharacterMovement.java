@@ -374,6 +374,11 @@ public class CharacterMovement extends Sprite {
         }
         currentAtlasKey = String.format("walking with trunk %s%04d", direction, currentFrame);
         this.setRegion(carryingTrunkatlas.findRegion(currentAtlasKey));
+        if (Math.abs(currentX - destinationX) < 5 && Math.abs(currentY - destinationY) < 5) {
+            carryingLogs = false;
+            destinationX = beforeCarryingX;
+            destinationY = beforeCarryingY;
+        }
     }
 
     public void select() {
