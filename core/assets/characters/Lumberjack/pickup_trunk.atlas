@@ -1,0 +1,733 @@
+pickup_trunk.png
+size: 1950, 910
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+pickup trunk e0000
+  rotate: false
+  xy: 1, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk e0001
+  rotate: false
+  xy: 1, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk e0002
+  rotate: false
+  xy: 1, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk e0003
+  rotate: false
+  xy: 1, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk e0004
+  rotate: false
+  xy: 1, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk e0005
+  rotate: false
+  xy: 1, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk e0006
+  rotate: false
+  xy: 1, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk e0007
+  rotate: false
+  xy: 131, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk e0008
+  rotate: false
+  xy: 131, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk e0009
+  rotate: false
+  xy: 131, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk e0010
+  rotate: false
+  xy: 131, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk e0011
+  rotate: false
+  xy: 131, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk e0012
+  rotate: false
+  xy: 131, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk n0000
+  rotate: false
+  xy: 131, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk n0001
+  rotate: false
+  xy: 261, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk n0002
+  rotate: false
+  xy: 261, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk n0003
+  rotate: false
+  xy: 261, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk n0004
+  rotate: false
+  xy: 261, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk n0005
+  rotate: false
+  xy: 261, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk n0006
+  rotate: false
+  xy: 261, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk n0007
+  rotate: false
+  xy: 261, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk n0008
+  rotate: false
+  xy: 391, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk n0009
+  rotate: false
+  xy: 391, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk n0010
+  rotate: false
+  xy: 391, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk n0011
+  rotate: false
+  xy: 391, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk n0012
+  rotate: false
+  xy: 391, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk ne0000
+  rotate: false
+  xy: 391, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk ne0001
+  rotate: false
+  xy: 391, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk ne0002
+  rotate: false
+  xy: 521, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk ne0003
+  rotate: false
+  xy: 521, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk ne0004
+  rotate: false
+  xy: 521, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk ne0005
+  rotate: false
+  xy: 521, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk ne0006
+  rotate: false
+  xy: 521, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk ne0007
+  rotate: false
+  xy: 521, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk ne0008
+  rotate: false
+  xy: 521, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk ne0009
+  rotate: false
+  xy: 651, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk ne0010
+  rotate: false
+  xy: 651, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk ne0011
+  rotate: false
+  xy: 651, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk ne0012
+  rotate: false
+  xy: 651, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk nw0000
+  rotate: false
+  xy: 651, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk nw0001
+  rotate: false
+  xy: 651, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk nw0002
+  rotate: false
+  xy: 651, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk nw0003
+  rotate: false
+  xy: 781, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk nw0004
+  rotate: false
+  xy: 781, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk nw0005
+  rotate: false
+  xy: 781, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk nw0006
+  rotate: false
+  xy: 781, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk nw0007
+  rotate: false
+  xy: 781, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk nw0008
+  rotate: false
+  xy: 781, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk nw0009
+  rotate: false
+  xy: 781, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk nw0010
+  rotate: false
+  xy: 911, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk nw0011
+  rotate: false
+  xy: 911, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk nw0012
+  rotate: false
+  xy: 911, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk s0000
+  rotate: false
+  xy: 911, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk s0001
+  rotate: false
+  xy: 911, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk s0002
+  rotate: false
+  xy: 911, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk s0003
+  rotate: false
+  xy: 911, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk s0004
+  rotate: false
+  xy: 1041, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk s0005
+  rotate: false
+  xy: 1171, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk s0006
+  rotate: false
+  xy: 1301, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk s0007
+  rotate: false
+  xy: 1431, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk s0008
+  rotate: false
+  xy: 1561, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk s0009
+  rotate: false
+  xy: 1691, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk s0010
+  rotate: false
+  xy: 1821, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk s0011
+  rotate: false
+  xy: 1041, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk s0012
+  rotate: false
+  xy: 1041, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk se0000
+  rotate: false
+  xy: 1041, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk se0001
+  rotate: false
+  xy: 1041, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk se0002
+  rotate: false
+  xy: 1041, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk se0003
+  rotate: false
+  xy: 1041, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk se0004
+  rotate: false
+  xy: 1171, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk se0005
+  rotate: false
+  xy: 1301, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk se0006
+  rotate: false
+  xy: 1431, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk se0007
+  rotate: false
+  xy: 1561, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk se0008
+  rotate: false
+  xy: 1691, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk se0009
+  rotate: false
+  xy: 1821, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk se0010
+  rotate: false
+  xy: 1171, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk se0011
+  rotate: false
+  xy: 1171, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk se0012
+  rotate: false
+  xy: 1171, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk sw0000
+  rotate: false
+  xy: 1171, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk sw0001
+  rotate: false
+  xy: 1171, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk sw0002
+  rotate: false
+  xy: 1301, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk sw0003
+  rotate: false
+  xy: 1431, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk sw0004
+  rotate: false
+  xy: 1561, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk sw0005
+  rotate: false
+  xy: 1691, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk sw0006
+  rotate: false
+  xy: 1821, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk sw0007
+  rotate: false
+  xy: 1301, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk sw0008
+  rotate: false
+  xy: 1301, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk sw0009
+  rotate: false
+  xy: 1301, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk sw0010
+  rotate: false
+  xy: 1301, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk sw0011
+  rotate: false
+  xy: 1431, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk sw0012
+  rotate: false
+  xy: 1561, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk w0000
+  rotate: false
+  xy: 1691, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk w0001
+  rotate: false
+  xy: 1821, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk w0002
+  rotate: false
+  xy: 1431, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk w0003
+  rotate: false
+  xy: 1431, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk w0004
+  rotate: false
+  xy: 1431, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk w0005
+  rotate: false
+  xy: 1561, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk w0006
+  rotate: false
+  xy: 1691, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk w0007
+  rotate: false
+  xy: 1821, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk w0008
+  rotate: false
+  xy: 1561, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk w0009
+  rotate: false
+  xy: 1561, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk w0010
+  rotate: false
+  xy: 1691, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk w0011
+  rotate: false
+  xy: 1821, 651
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+pickup trunk w0012
+  rotate: false
+  xy: 1691, 781
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1

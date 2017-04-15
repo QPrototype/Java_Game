@@ -1,0 +1,61 @@
+stopped.png
+size: 784, 98
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+stopped0000
+  rotate: false
+  xy: 1, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped0001
+  rotate: false
+  xy: 99, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped0002
+  rotate: false
+  xy: 197, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped0003
+  rotate: false
+  xy: 295, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped0004
+  rotate: false
+  xy: 393, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped0005
+  rotate: false
+  xy: 491, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped0006
+  rotate: false
+  xy: 589, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped0007
+  rotate: false
+  xy: 687, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1

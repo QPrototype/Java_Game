@@ -1,0 +1,61 @@
+stopped_trunk.png
+size: 784, 98
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+stopped with trunk0000
+  rotate: false
+  xy: 1, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped with trunk0001
+  rotate: false
+  xy: 99, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped with trunk0002
+  rotate: false
+  xy: 197, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped with trunk0003
+  rotate: false
+  xy: 295, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped with trunk0004
+  rotate: false
+  xy: 393, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped with trunk0005
+  rotate: false
+  xy: 491, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped with trunk0006
+  rotate: false
+  xy: 589, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+stopped with trunk0007
+  rotate: false
+  xy: 687, 1
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
