@@ -16,6 +16,7 @@ public class CharacterMovement extends Sprite {
     private TextureAtlas walkingAtlas;
     private TextureAtlas lookingAtlas;
     private TextureAtlas cuttingAtlas;
+    private TextureAtlas miningAtlas;
 
     private static final int TILE_WIDTH = 64;
     private static final int TILE_HEIGHT = 32;
@@ -36,27 +37,25 @@ public class CharacterMovement extends Sprite {
 
 
     public static int cutStart = -1;
-    public static int cutEnd = -1;
+    public static int mineStart = -1;
     public TiledMapTile current;
     public TiledMapTileSet pine;
     public TiledMapTileLayer.Cell cut;
-    public TiledMapTileLayer.Cell cut2;
-    public TiledMapTileLayer.Cell cut3;
-    public TiledMapTileLayer.Cell cut4;
-    public TiledMapTileSet grass_water;
-    public TiledMapTile grass;
+    public TiledMapTileLayer.Cell mine;
 
     private boolean selected = false;
 
 
 
-    public CharacterMovement(String type, TextureAtlas walkingAtlas, TextureAtlas lookingAtlas, TextureAtlas cuttingAtlas, TextureAtlas.AtlasRegion region,
+    public CharacterMovement(String type, TextureAtlas walkingAtlas, TextureAtlas lookingAtlas,
+                             TextureAtlas cuttingAtlas, TextureAtlas miningAtlas,  TextureAtlas.AtlasRegion region,
                              TiledMap map) {
         super(new Sprite(region));
 
         this.walkingAtlas = walkingAtlas;
         this.lookingAtlas = lookingAtlas;
         this.cuttingAtlas = cuttingAtlas;
+        this.miningAtlas = miningAtlas;
         this.map = map;
         //this.setPosition(currentX, currentY);
         this.background = (TiledMapTileLayer) map.getLayers().get(0);
@@ -104,30 +103,48 @@ public class CharacterMovement extends Sprite {
                 x++;
                 y--;
             }
-            if (type.equals("worker")) {
+            // Checking if unit is a worker and close enough to destination
+            if (type.equals("worker") && Math.abs(currPosX - x) < 3 && Math.abs(currPosY - y) < 3) {
+                // Looping through nearby tiles looking for tree
                 for (int i = x - 1; i < x + 1; i++) {
                     for (int j = y - 1; j < y + 3; j++) {
                         cut = foreground.getCell(i - 1, j - 3);
+                        mine = foreground.getCell(i, j - 2);
+
                         if (cut != null && cut.getTile() != null && cut.getTile().getProperties().containsKey("suur")) {
                             if (cutStart == -1) {
                                 cutStart = GameHud.getTime();
                             }
                             if (cutStart - 3 > GameHud.getTime()) {
-                                current = cut.getTile();
+                                //current = cut.getTile();
 
                                 cut.setTile(null);
                                 cutStart = -1;
 
-                                //Add wood
                                 GameHud.addWood(20);
                             }
 
                             return "cut";
+                        } else if (mine != null && mine.getTile() != null
+                                && mine.getTile().getProperties().containsKey("iron")) {
+                            if (mineStart == -1) {
+                                mineStart = GameHud.getTime();
+                            }
+                            if (mineStart - 3 > GameHud.getTime()) {
+                                //current = mine.getTile();
+
+                                mine.setTile(null);
+                                mineStart = -1;
+
+                                //GameHud.addIron(20);
+                            }
+                            return "mine";
                         }
                     }
                 }
-
+                    // When worker assignment is cancelled
                     cutStart = -1;
+                    mineStart = -1;
                 }
 
             //respawn tree
@@ -162,6 +179,9 @@ public class CharacterMovement extends Sprite {
                     } else if (checkCollision("ne").equals("cut")) {
                         cutTree("ne");
                         return;
+                    } else if (checkCollision("ne").equals("mine")) {
+                        mine("ne");
+                        return;
                     }
                     currentX += 3;
                     currentY += 3;
@@ -171,6 +191,9 @@ public class CharacterMovement extends Sprite {
                         return;
                     } else if (checkCollision("se").equals("cut")) {
                         cutTree("se");
+                        return;
+                    }  else if (checkCollision("se").equals("mine")) {
+                        mine("se");
                         return;
                     }
 
@@ -182,6 +205,9 @@ public class CharacterMovement extends Sprite {
                         return;
                     } else if (checkCollision("e").equals("cut")) {
                         cutTree("e");
+                        return;
+                    } else if (checkCollision("e").equals("mine")) {
+                        mine("e");
                         return;
                     }
                     currentX += 3;
@@ -195,6 +221,9 @@ public class CharacterMovement extends Sprite {
                     } else if (checkCollision("nw").equals("cut")) {
                         cutTree("nw");
                         return;
+                    } else if (checkCollision("nw").equals("mine")) {
+                        mine("nw");
+                        return;
                     }
                     currentX -= 4;
                     currentY += 4;
@@ -205,6 +234,9 @@ public class CharacterMovement extends Sprite {
                     } else if (checkCollision("sw").equals("cut")) {
                         cutTree("sw");
                         return;
+                    } else if (checkCollision("sw").equals("mine")) {
+                        mine("sw");
+                        return;
                     }
                     currentX -= 3;
                     currentY -= 3;
@@ -214,6 +246,9 @@ public class CharacterMovement extends Sprite {
                         return;
                     } else if (checkCollision("w").equals("cut")) {
                         cutTree("w");
+                        return;
+                    } else if (checkCollision("w").equals("mine")) {
+                        mine("w");
                         return;
                     }
                     currentX -= 4;
@@ -226,6 +261,9 @@ public class CharacterMovement extends Sprite {
                     } else if (checkCollision("n").equals("cut")) {
                         cutTree("n");
                         return;
+                    }  else if (checkCollision("n").equals("mine")) {
+                        mine("n");
+                        return;
                     }
                     currentY += 4;
                     changeFrame("n");
@@ -234,6 +272,9 @@ public class CharacterMovement extends Sprite {
                         return;
                     } else if (checkCollision("s").equals("cut")) {
                         cutTree("s");
+                        return;
+                    }  else if (checkCollision("s").equals("mine")) {
+                        mine("s");
                         return;
                     }
                     currentY -= 4;
@@ -265,6 +306,16 @@ public class CharacterMovement extends Sprite {
         }
         currentAtlasKey = String.format("felling tree %s%04d", direction, currentFrame);
         this.setRegion(cuttingAtlas.findRegion(currentAtlasKey));
+    }
+
+    public void mine(String direction) {
+        this.setPosition(currentX, currentY);
+        currentFrame++;
+        if (currentFrame > 12) {
+            currentFrame = 0;
+        }
+        currentAtlasKey = String.format("working %s%04d", direction, currentFrame);
+        this.setRegion(miningAtlas.findRegion(currentAtlasKey));
     }
 
     public void carryTrunk(String direction) {

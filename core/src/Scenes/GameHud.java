@@ -38,7 +38,7 @@ public class GameHud {
     private Label countdownLabel, timeLabel, linkLabel, unitActivitiesLabel, mapLabel;
     private Label woodLabel, foodLabel, goldLabel;
 
-    public static int woodCount, foodCount, goldCount;
+    public static int woodCount, foodCount, goldCount, ironCount;
 
     private static Label scoreLabel;
 
@@ -54,6 +54,7 @@ public class GameHud {
     private Table wood;
     private Table food;
     private Table gold;
+    private Table iron;
 
     private Skin unitSkin;
     private Skin resourceSkin;
@@ -61,6 +62,7 @@ public class GameHud {
     private Skin woodSkin;
     private Skin foodSkin;
     private Skin goldSkin;
+    private Skin ironSkin;
     private Skin menuSkin;
 
     private Drawable drawable;
@@ -254,4 +256,9 @@ public class GameHud {
     public static void addWood(int amount) {
         woodCount += amount;
     }
+
+    public static void addIron(int amount) {
+        ironCount += amount;
+    }
+
 }

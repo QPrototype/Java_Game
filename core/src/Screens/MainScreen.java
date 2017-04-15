@@ -54,6 +54,7 @@ public class MainScreen implements Screen {
     private TextureAtlas walkingAtlas;
     private TextureAtlas lookingAtlas;
     private TextureAtlas cuttingAtlas;
+    private TextureAtlas miningAtlas;
     private CharacterMovement sprite;
     private CharacterMovement sprite2;
     public List<CharacterMovement> allUnits = new ArrayList<CharacterMovement>();
@@ -86,13 +87,15 @@ public class MainScreen implements Screen {
 
         walkingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/walking.atlas"));
         lookingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/looking.atlas"));
-        cuttingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/cutting.atlas"));
+        cuttingAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/Lumberjack/cutting.atlas"));
+        miningAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/Miner/mining.atlas"));
+
 
         gameHud = new GameHud(hudBatch);
 
         //Camera
         camera = new OrthographicCamera(WORLD_WIDTH, WORLD_HEIGHT);
-        camera.zoom = 2;
+        camera.zoom = 1.5f;
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         // minimap camera
@@ -115,8 +118,8 @@ public class MainScreen implements Screen {
         camera.position.set(center);
 
         TextureAtlas.AtlasRegion region = walkingAtlas.findRegion("walking e0000");
-        sprite = new CharacterMovement("worker", walkingAtlas, lookingAtlas, cuttingAtlas, region, map);
-        sprite2 = new CharacterMovement("fighter", walkingAtlas, lookingAtlas, cuttingAtlas, region, map);
+        sprite = new CharacterMovement("worker", walkingAtlas, lookingAtlas, cuttingAtlas, miningAtlas, region, map);
+        sprite2 = new CharacterMovement("fighter", walkingAtlas, lookingAtlas, cuttingAtlas, miningAtlas, region, map);
         allUnits.add(sprite);
         allUnits.add(sprite2);
         sprite.setLocation(600, 5);
