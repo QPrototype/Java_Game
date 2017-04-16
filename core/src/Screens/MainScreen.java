@@ -59,6 +59,8 @@ public class MainScreen implements Screen {
     private TextureAtlas miningAtlas;
     private TextureAtlas carryingTrunkAtlas;
     private TextureAtlas carryingIron;
+    private TextureAtlas pickUp;
+    private TextureAtlas carryBerries;
     public ArrayList<TextureAtlas> atlases = new ArrayList<TextureAtlas>();
     private CharacterMovement sprite;
     private CharacterMovement sprite2;
@@ -97,12 +99,17 @@ public class MainScreen implements Screen {
         miningAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/Miner/mining.atlas"));
         carryingTrunkAtlas = new TextureAtlas(Gdx.files.internal("core/assets/characters/Lumberjack/walking_trunk.atlas"));
         carryingIron = new TextureAtlas(Gdx.files.internal("core/assets/characters/Miner/carrying.atlas"));
+        pickUp = new TextureAtlas(Gdx.files.internal("core/assets/characters/BerryGuy/picking.atlas"));
+        carryBerries = new TextureAtlas(Gdx.files.internal("core/assets/characters/BerryGuy/carrying.atlas"));
+
         atlases.add(walkingAtlas);
         atlases.add(lookingAtlas);
         atlases.add(cuttingAtlas);
         atlases.add(miningAtlas);
         atlases.add(carryingTrunkAtlas);
         atlases.add(carryingIron);
+        atlases.add(pickUp);
+        atlases.add(carryBerries);
 
         gameHud = new GameHud(hudBatch);
 
@@ -198,6 +205,7 @@ public class MainScreen implements Screen {
     public static void removeIronOre(Point2D.Double coordinates) {
         allIronOres.remove(coordinates);
     }
+
 
 
     @Override
@@ -305,7 +313,8 @@ public class MainScreen implements Screen {
             projected.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             if (projected.y < 943) {
                 for (CharacterMovement unit : allUnits) {
-                    if (unit.isSelected() && !unit.isCarryingLogs() && !unit.isCarryingIronOres()) {
+                    if (unit.isSelected() && !unit.isCarryingLogs() && !unit.isCarryingIronOres()
+                            && !unit.isCarryingBerries()) {
                         unit.setDestination(clickOnScreen.x - unit.getWidth() / 2, clickOnScreen.y - 10);
                     }
                 }

@@ -19,6 +19,8 @@ public class CharacterMovement extends Sprite {
     private TextureAtlas miningAtlas;
     private TextureAtlas carryingTrunkAtlas;
     private TextureAtlas carryingIronOreAtlas;
+    private TextureAtlas pickingUpAtlas;
+    private TextureAtlas carryingBerriesAtlas;
 
     private static final int TILE_WIDTH = 64;
     private static final int TILE_HEIGHT = 32;
@@ -41,16 +43,22 @@ public class CharacterMovement extends Sprite {
 
     public static int cutStart = -1;
     public static int mineStart = -1;
+    public static int pickStart = -1;
     private boolean carryingLogs = false;
     private boolean carryingIronOres = false;
+    private boolean carryingBerries = false;
     private int lastTreeX;
     private int lastTreeY;
     private int lastOreX;
     private int lastOreY;
+    private int lastBushX;
+    private int lastBushY;
+    private int counter = 0;
 
 
     public TiledMapTileLayer.Cell cut;
     public TiledMapTileLayer.Cell mine;
+    public TiledMapTileLayer.Cell pick;
 
     private boolean selected = false;
 
@@ -65,6 +73,8 @@ public class CharacterMovement extends Sprite {
         this.miningAtlas = atlases.get(3);
         this.carryingTrunkAtlas = atlases.get(4);
         this.carryingIronOreAtlas = atlases.get(5);
+        this.pickingUpAtlas = atlases.get(6);
+        this.carryingBerriesAtlas = atlases.get(7);
         this.map = map;
         this.background = (TiledMapTileLayer) map.getLayers().get(0);
         this.foreground = (TiledMapTileLayer) map.getLayers().get(1);
@@ -118,6 +128,7 @@ public class CharacterMovement extends Sprite {
                     for (int j = y - 1; j < y + 3; j++) {
                         cut = foreground.getCell(i - 1, j - 3);
                         mine = foreground.getCell(i, j - 2);
+                        pick = foreground.getCell(i - 1, j - 6);
 
                         if (cut != null && cut.getTile() != null && cut.getTile().getProperties().containsKey("suur")) {
                             if (cutStart == -1) {
@@ -150,6 +161,7 @@ public class CharacterMovement extends Sprite {
                                 //current = mine.getTile();
 
                                 mine.setTile(null);
+                                MainScreen.removeIronOre(new Point2D.Double(i, j - 2));
                                 mineStart = -1;
 
                                 // For automatic carrying of logs
@@ -163,6 +175,27 @@ public class CharacterMovement extends Sprite {
                                 //GameHud.addIron(20);
                             }
                             return "mine";
+                        } else if (pick != null && pick.getTile() != null
+                                && pick.getTile().getProperties().containsKey("berries") && !carryingBerries) {
+                            if (pickStart == -1) {
+                                pickStart = GameHud.getTime();
+                            }
+                            if (pickStart - 10 > GameHud.getTime()) {
+
+                                //pick.setTile(null);
+
+                                pickStart = -1;
+
+                                // For automatic carrying of berries
+                                carryingBerries = true;
+                                // Where to carry berries --> Main building location
+                                lastBushX = x - 1;
+                                lastBushY = y - 6;
+                                System.out.println("x: " + x + "y: " + y);
+                                destinationX = 870;
+                                destinationY = -185;
+                            }
+                            return "berries";
                         }
                     }
                 }
@@ -206,6 +239,9 @@ public class CharacterMovement extends Sprite {
                     } else if (checkCollision("ne").equals("mine")) {
                         mine("ne");
                         return;
+                    } else if (checkCollision("ne").equals("berries")) {
+                        pickUp("ne");
+                        return;
                     }
                     currentX += 3;
                     currentY += 3;
@@ -213,6 +249,8 @@ public class CharacterMovement extends Sprite {
                         carryTrunk("ne");
                     } else if (carryingIronOres) {
                         carryIron("ne");
+                    } else if (carryingBerries) {
+                        carryBerries("ne");
                     } else {
                         changeFrame("ne");
                     }
@@ -225,6 +263,9 @@ public class CharacterMovement extends Sprite {
                     }  else if (checkCollision("se").equals("mine")) {
                         mine("se");
                         return;
+                    } else if (checkCollision("se").equals("berries")) {
+                        pickUp("se");
+                        return;
                     }
                     currentX += 4;
                     currentY -= 4;
@@ -232,6 +273,8 @@ public class CharacterMovement extends Sprite {
                         carryTrunk("se");
                     } else if (carryingIronOres) {
                         carryIron("se");
+                    } else if (carryingBerries) {
+                        carryBerries("se");
                     } else {
                         changeFrame("se");
                     }
@@ -244,6 +287,9 @@ public class CharacterMovement extends Sprite {
                     } else if (checkCollision("e").equals("mine")) {
                         mine("e");
                         return;
+                    } else if (checkCollision("e").equals("berries")) {
+                        pickUp("e");
+                        return;
                     }
                     currentX += 3;
                     //this.setPosition(currentX, currentY);
@@ -251,6 +297,8 @@ public class CharacterMovement extends Sprite {
                         carryTrunk("e");
                     } else if (carryingIronOres) {
                         carryIron("e");
+                    } else if (carryingBerries) {
+                        carryBerries("e");
                     } else {
                         changeFrame("e");
                     }
@@ -265,6 +313,9 @@ public class CharacterMovement extends Sprite {
                     } else if (checkCollision("nw").equals("mine")) {
                         mine("nw");
                         return;
+                    } else if (checkCollision("nw").equals("berries")) {
+                        pickUp("nw");
+                        return;
                     }
                     currentX -= 4;
                     currentY += 4;
@@ -272,6 +323,8 @@ public class CharacterMovement extends Sprite {
                         carryTrunk("nw");
                     } else if (carryingIronOres) {
                         carryIron("nw");
+                    } else if (carryingBerries) {
+                        carryBerries("nw");
                     } else {
                         changeFrame("nw");
                     }
@@ -284,6 +337,9 @@ public class CharacterMovement extends Sprite {
                     } else if (checkCollision("sw").equals("mine")) {
                         mine("sw");
                         return;
+                    } else if (checkCollision("sw").equals("berries")) {
+                        pickUp("sw");
+                        return;
                     }
                     currentX -= 3;
                     currentY -= 3;
@@ -291,6 +347,8 @@ public class CharacterMovement extends Sprite {
                         carryTrunk("sw");
                     } else if (carryingIronOres) {
                         carryIron("sw");
+                    } else if (carryingBerries) {
+                        carryBerries("sw");
                     } else {
                         changeFrame("sw");
                     }
@@ -303,12 +361,17 @@ public class CharacterMovement extends Sprite {
                     } else if (checkCollision("w").equals("mine")) {
                         mine("w");
                         return;
+                    } else if (checkCollision("w").equals("berries")) {
+                        pickUp("w");
+                        return;
                     }
                     currentX -= 4;
                     if (carryingLogs) {
                         carryTrunk("w");
                     } else if (carryingIronOres) {
                         carryIron("w");
+                    } else if (carryingBerries) {
+                        carryBerries("w");
                     } else {
                         changeFrame("w");
                     }
@@ -323,12 +386,17 @@ public class CharacterMovement extends Sprite {
                     }  else if (checkCollision("n").equals("mine")) {
                         mine("n");
                         return;
+                    } else if (checkCollision("n").equals("berries")) {
+                        pickUp("n");
+                        return;
                     }
                     currentY += 4;
                     if (carryingLogs) {
                         carryTrunk("n");
                     } else if (carryingIronOres) {
                         carryIron("n");
+                    } else if (carryingBerries) {
+                        carryBerries("n");
                     } else {
                         changeFrame("n");
                     }
@@ -341,12 +409,17 @@ public class CharacterMovement extends Sprite {
                     }  else if (checkCollision("s").equals("mine")) {
                         mine("s");
                         return;
+                    } else if (checkCollision("s").equals("berries")) {
+                        pickUp("s");
+                        return;
                     }
                     currentY -= 4;
                     if (carryingLogs) {
                         carryTrunk("s");
                     } else if (carryingIronOres) {
                         carryIron("s");
+                    } else if (carryingBerries) {
+                        carryBerries("s");
                     } else {
                         changeFrame("s");
                     }
@@ -389,6 +462,19 @@ public class CharacterMovement extends Sprite {
         this.setRegion(miningAtlas.findRegion(currentAtlasKey));
     }
 
+    public void pickUp(String direction) {
+        this.setPosition(currentX, currentY);
+        counter++;
+        if (counter % 4 == 0) {
+            currentFrame++;
+        }
+        if (currentFrame > 8) {
+            currentFrame = 0;
+        }
+        currentAtlasKey = String.format("pick up %s%04d", direction, currentFrame);
+        this.setRegion(pickingUpAtlas.findRegion(currentAtlasKey));
+    }
+
     public void carryTrunk(String direction) {
             this.setPosition(currentX, currentY);
         currentFrame++;
@@ -424,8 +510,8 @@ public class CharacterMovement extends Sprite {
             } else {
                 //int currPosX = currentX / TILE_WIDTH - currentY / TILE_HEIGHT + 1;
                 //int currPosY = currentX / TILE_WIDTH + currentY / TILE_HEIGHT + 1;
-                destinationX = lastTreeX;
-                destinationY = lastTreeY;
+                destinationX = (lastTreeX + lastTreeY) * TILE_HEIGHT + 110;
+                destinationY = (lastTreeY - lastTreeX) / 2 * TILE_HEIGHT + 20;
 
             }
         }
@@ -461,11 +547,48 @@ public class CharacterMovement extends Sprite {
                 destinationY = (nextY - nextX) / 2 * TILE_HEIGHT + 20;
             } else {
 
-                destinationX = lastOreX;
-                destinationY = lastOreY;
+                destinationX = (lastOreX + lastOreY) * TILE_HEIGHT + 110;
+                destinationY = (lastOreY - lastOreX) / 2 * TILE_HEIGHT + 20;
 
             }
         }
+    }
+
+    public void carryBerries(String direction) {
+        this.setPosition(currentX, currentY);
+        currentFrame++;
+        if (currentFrame > 7) {
+            currentFrame = 0;
+        }
+        currentAtlasKey = String.format("walking %s%04d", direction, currentFrame);
+        this.setRegion(carryingBerriesAtlas.findRegion(currentAtlasKey));
+        if (Math.abs(currentX - destinationX) < 10 && Math.abs(currentY - destinationY) < 10) {
+            //GameHud.addFood(20);
+
+            carryingBerries = false;
+            //int difference = 5000;
+            //int nextX = -1;
+            //int nextY = -1;
+            //for (Point2D coordinates : MainScreen.allIronOres) {
+            //    int tempDiff = 0;
+            //    tempDiff += Math.abs(coordinates.getX() - lastOreX);
+            //    tempDiff += Math.abs(coordinates.getY() - lastOreY);
+            //    if (tempDiff < difference) {
+            //        difference = tempDiff;
+            //        nextX = (int) coordinates.getX();
+            //        nextY = (int) coordinates.getY();
+            //    }
+            //}
+            //if (nextX != -1 && nextY != -1) {
+            //    destinationX = (nextX + nextY) * TILE_HEIGHT + 110;
+            //    destinationY = (nextY - nextX) / 2 * TILE_HEIGHT + 20;
+            //} else {
+
+            destinationX = (lastBushX + lastBushY) * TILE_HEIGHT + 110;
+            destinationY = (lastBushY - lastBushX) / 2 * TILE_HEIGHT + 20;
+            //}
+        }
+
     }
 
     public void select() {
@@ -502,6 +625,10 @@ public class CharacterMovement extends Sprite {
 
     public boolean isCarryingIronOres() {
         return carryingIronOres;
+    }
+
+    public boolean isCarryingBerries() {
+        return carryingBerries;
     }
 }
 
